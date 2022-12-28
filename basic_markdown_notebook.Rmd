@@ -1,0 +1,217 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+
+
+```{r}
+
+#Loading NAGS dyadic (supporter-target) data
+
+library(here)
+library(readr)
+nags_data1 <- read_delim(here("data","Dyadic_Target-Supporter_active_support.csv"), delim = ";", escape_double = FALSE, trim_ws = TRUE)
+View(nags_data1)
+
+nags_data1 <- nags_data1[which(nags_data1$Year > 1945),]
+
+nags_data1$year <- nags_data1$Year
+nags_data1$COWcode <- nags_data1$SupNum_COW
+
+```
+
+```{r}
+
+# creating polity scores for supporter and target countries
+
+#load polity data set for suppoters
+#
+library(readxl)
+support_polity <- read_excel("data/p5v2018.xls")
+View(support_polity)
+
+#create score labels for supporters
+support_polity$supporter_p5 <- support_polity$p5
+support_polity$supporter_cyear <- support_polity$cyear
+support_polity$supporter_flag <- support_polity$flag
+support_polity$SupNum_COW <- support_polity$ccode 
+support_polity$supporter_democ <- support_polity$democ 
+support_polity$supporter_autoc <- support_polity$autoc
+support_polity$supporter_polity <- support_polity$polity
+support_polity$supporter_polity2 <- support_polity$polity2
+support_polity$supporter_durable <- support_polity$durable
+
+#select only the supporter named variables
+
+support_polity <- support_polity[c(6,38:46)]
+
+#repeat the above for target countries
+
+#load polity data set for targets
+#
+target_polity <- read_excel("data/p5v2018.xls")
+View(target_polity)
+
+#create score labels for targets
+target_polity$target_p5 <- target_polity$p5
+target_polity$target_cyear <- target_polity$cyear
+target_polity$target_flag <- target_polity$flag
+target_polity$TarNum_COW <- target_polity$ccode 
+target_polity$target_democ <- target_polity$democ 
+target_polity$target_autoc <- target_polity$autoc
+target_polity$target_polity <- target_polity$polity
+target_polity$target_polity2 <- target_polity$polity2
+target_polity$target_durable <- target_polity$durable
+
+#select only the target named variables
+
+target_polity <- target_polity[c(6,38:46)]
+
+
+```
+
+```{r}
+# Merge polity data for supporters
+library(dplyr)
+nags_data2 <- left_join(nags_data1,support_polity, by = c("SupNum_COW","year"))
+
+# Merge polity data for targets
+
+nags_data3 <- left_join(nags_data2,target_polity, by = c("TarNum_COW","year"))
+
+
+```
+
+
+
+```{r}
+
+countries_data <- read_csv(here("data","vdem_plus_w.csv"))
+View(countries_data)
+
+countries_data <- countries_data[which(countries_data$year < 2011),]
+
+library(dplyr)
+
+full_data <- left_join(nags_data3,countries_data, by = c("COWcode","year"))
+
+# vdem_select1 <- vdem_w_select[which(vdem_w_select$year > 1945),]
+
+
+
+
+```
+
+
+```{r}
+summary(full_data$W_norm)
+
+# create a democracy target variable
+# 
+
+
+full_data$targ_democratic <- ifelse(full_data$target_polity > 6,1,0)
+summary(full_data$targ_democratic)
+
+#create a binary democracy variable for supporters 
+
+full_data$supp_democratic <- ifelse(full_data$supporter_polity > 6,1,0)
+summary(full_data$supp_democratic)
+
+
+
+
+# normalize opposition and support group size variables
+# 
+
+
+minopp <- min(full_data$v2regoppgroupssize, na.rm = TRUE)
+maxopp <- max(full_data$v2regoppgroupssize, na.rm = TRUE)
+
+
+full_data$oppsize_norm <- (full_data$v2regoppgroupssize - minopp ) / (maxopp - minopp)
+
+
+minsupp <- min(full_data$v2regsupgroupssize, na.rm = TRUE)
+maxsupp <- max(full_data$v2regsupgroupssize, na.rm = TRUE)
+
+full_data$suppsize_norm <- (full_data$v2regsupgroupssize - minsupp) / (maxsupp - minsupp)
+
+
+summary(full_data$suppsize_norm)
+summary(full_data$oppsize_norm)
+
+
+
+# create a variable of ratio of opposition to support group size
+
+full_data$opp_supp_ratio <- full_data$oppsize_norm / full_data$suppsize_norm
+summary(full_data$opp_supp_ratio)
+
+# create variable of ratio of support size score to W score
+# 
+
+full_data$supp_W_ratio <- full_data$suppsize_norm / full_data$W_norm
+summary(full_data$supp_W_ratio)
+
+# create variable of ratio of opposition to W
+
+full_data$opp_W_ratio <- full_data$oppsize_norm / full_data$W_norm
+summary(full_data$opp_W_ratio)
+
+
+# create dataframe with just non-democractic supporter states
+# 
+
+full_data$supp_autocratic <- ifelse(full_data$supporter_polity < 5,1,0)
+summary(full_data$supp_autocratic)
+
+autocracies_data <- full_data[which(full_data$supp_autocratic == 1),]
+
+
+```
+```{r}
+
+library(MASS)
+
+# models with just opposition and support group sizes
+# 
+
+model_opposition <- glm.nb(targ_democratic ~ oppsize_norm + supporter_polity, data = autocracies_data)
+summary(model_opposition)
+        
+model_support <- glm.nb(targ_democratic ~ suppsize_norm + supporter_polity, data = autocracies_data)
+summary(model_support)
+        
+
+
+## Model W - just the effect of W
+## 
+
+modelw <- glm.nb(targ_democratic ~ W_norm, data = autocracies_data)
+summary(modelw)
+
+#ratio of actual support to W - how close are they to a truly minimal winning coalition
+#
+model1 <- glm.nb(targ_democratic ~ supp_W_ratio + supporter_polity, data = autocracies_data)
+summary(model1)
+
+
+# ratio of opponent size to W - how close are the opposition to having a minimal winning coalition of their own
+
+model2 <- glm.nb(targ_democratic ~ opp_W_ratio + supporter_polity, data = autocracies_data)
+summary(model2)
+
+# ratio of opposition to supporters - head to head match up
+
+model3 <- glm.nb(targ_democratic ~ opp_supp_ratio + supporter_polity, data = autocracies_data)
+summary(model3)
+
+model4 <- glm.nb(targ_democratic ~ opp_supp_ratio + supp_W_ratio + supporter_polity, data = autocracies_data)
+summary(model4)
+
+
+```
+
