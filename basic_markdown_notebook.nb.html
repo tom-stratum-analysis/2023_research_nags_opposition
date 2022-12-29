@@ -1896,107 +1896,14 @@ full_data &lt;- left_join(nags_data3,countries_data, by = c(&quot;COWcode&quot;,
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtbWFyeShmdWxsX2RhdGEkV19ub3JtKVxuYGBgIn0= -->
-<pre class="r"><code>summary(full_data$W_norm)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZnVsbF9kYXRhJHN1cHBfYXV0b2NyYXRpYyA8LSBpZmVsc2UoZnVsbF9kYXRhJHN1cHBvcnRlcl9wb2xpdHkgPCAtNSwxLDApXG5zdW1tYXJ5KGZ1bGxfZGF0YSRzdXBwX2F1dG9jcmF0aWMpXG5cbmBgYCJ9 -->
+<pre class="r"><code>full_data$supp_autocratic &lt;- ifelse(full_data$supporter_polity &lt; -5,1,0)
+summary(full_data$supp_autocratic)
+</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgTWluLiAxc3QgUXUuICBNZWRpYW4gICAgTWVhbiAzcmQgUXUuICAgIE1heC4gICAgTkEncyBcbiAwLjAxMDkgIDAuMjUwNyAgMC41MjEyICAwLjUzNTIgIDAuODQ3OCAgMS4wMDAwICAgICA2MjMgXG4ifQ== -->
+<!-- rnb-output-begin eyJkYXRhIjoiICAgTWluLiAxc3QgUXUuICBNZWRpYW4gICAgTWVhbiAzcmQgUXUuICAgIE1heC4gICAgTkEncyBcbiAwLjAwMDAgIDAuMDAwMCAgMC4wMDAwICAwLjQzODEgIDEuMDAwMCAgMS4wMDAwICAgICA4MTMgXG4ifQ== -->
 <pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
- 0.0109  0.2507  0.5212  0.5352  0.8478  1.0000     623 </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjcmVhdGUgYSBkZW1vY3JhY3kgdGFyZ2V0IHZhcmlhYmxlXG4jIFxuXG5cbmZ1bGxfZGF0YSR0YXJnX2RlbW9jcmF0aWMgPC0gaWZlbHNlKGZ1bGxfZGF0YSR0YXJnZXRfcG9saXR5ID4gNiwxLDApXG5zdW1tYXJ5KGZ1bGxfZGF0YSR0YXJnX2RlbW9jcmF0aWMpXG5gYGAifQ== -->
-<pre class="r"><code># create a democracy target variable
-# 
-
-
-full_data$targ_democratic &lt;- ifelse(full_data$target_polity &gt; 6,1,0)
-summary(full_data$targ_democratic)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgTWluLiAxc3QgUXUuICBNZWRpYW4gICAgTWVhbiAzcmQgUXUuICAgIE1heC4gICAgTkEncyBcbiAwLjAwMDAgIDAuMDAwMCAgMC4wMDAwICAwLjI3OTQgIDEuMDAwMCAgMS4wMDAwICAgICA1MTUgXG4ifQ== -->
-<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
- 0.0000  0.0000  0.0000  0.2794  1.0000  1.0000     515 </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI2NyZWF0ZSBhIGJpbmFyeSBkZW1vY3JhY3kgdmFyaWFibGUgZm9yIHN1cHBvcnRlcnMgXG5cbmZ1bGxfZGF0YSRzdXBwX2RlbW9jcmF0aWMgPC0gaWZlbHNlKGZ1bGxfZGF0YSRzdXBwb3J0ZXJfcG9saXR5ID4gNiwxLDApXG5zdW1tYXJ5KGZ1bGxfZGF0YSRzdXBwX2RlbW9jcmF0aWMpXG5gYGAifQ== -->
-<pre class="r"><code>#create a binary democracy variable for supporters 
-
-full_data$supp_democratic &lt;- ifelse(full_data$supporter_polity &gt; 6,1,0)
-summary(full_data$supp_democratic)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgTWluLiAxc3QgUXUuICBNZWRpYW4gICAgTWVhbiAzcmQgUXUuICAgIE1heC4gICAgTkEncyBcbiAwLjAwMDAgIDAuMDAwMCAgMC4wMDAwICAwLjM1MTEgIDEuMDAwMCAgMS4wMDAwICAgICA4MTMgXG4ifQ== -->
-<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
- 0.0000  0.0000  0.0000  0.3511  1.0000  1.0000     813 </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBub3JtYWxpemUgb3Bwb3NpdGlvbiBhbmQgc3VwcG9ydCBncm91cCBzaXplIHZhcmlhYmxlc1xuIyBcblxuXG5taW5vcHAgPC0gbWluKGZ1bGxfZGF0YSR2MnJlZ29wcGdyb3Vwc3NpemUsIG5hLnJtID0gVFJVRSlcbm1heG9wcCA8LSBtYXgoZnVsbF9kYXRhJHYycmVnb3BwZ3JvdXBzc2l6ZSwgbmEucm0gPSBUUlVFKVxuXG5cbmZ1bGxfZGF0YSRvcHBzaXplX25vcm0gPC0gKGZ1bGxfZGF0YSR2MnJlZ29wcGdyb3Vwc3NpemUgLSBtaW5vcHAgKSAvIChtYXhvcHAgLSBtaW5vcHApXG5cblxubWluc3VwcCA8LSBtaW4oZnVsbF9kYXRhJHYycmVnc3VwZ3JvdXBzc2l6ZSwgbmEucm0gPSBUUlVFKVxubWF4c3VwcCA8LSBtYXgoZnVsbF9kYXRhJHYycmVnc3VwZ3JvdXBzc2l6ZSwgbmEucm0gPSBUUlVFKVxuXG5mdWxsX2RhdGEkc3VwcHNpemVfbm9ybSA8LSAoZnVsbF9kYXRhJHYycmVnc3VwZ3JvdXBzc2l6ZSAtIG1pbnN1cHApIC8gKG1heHN1cHAgLSBtaW5zdXBwKVxuXG5cbnN1bW1hcnkoZnVsbF9kYXRhJHN1cHBzaXplX25vcm0pXG5gYGAifQ== -->
-<pre class="r"><code># normalize opposition and support group size variables
-# 
-
-
-minopp &lt;- min(full_data$v2regoppgroupssize, na.rm = TRUE)
-maxopp &lt;- max(full_data$v2regoppgroupssize, na.rm = TRUE)
-
-
-full_data$oppsize_norm &lt;- (full_data$v2regoppgroupssize - minopp ) / (maxopp - minopp)
-
-
-minsupp &lt;- min(full_data$v2regsupgroupssize, na.rm = TRUE)
-maxsupp &lt;- max(full_data$v2regsupgroupssize, na.rm = TRUE)
-
-full_data$suppsize_norm &lt;- (full_data$v2regsupgroupssize - minsupp) / (maxsupp - minsupp)
-
-
-summary(full_data$suppsize_norm)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgTWluLiAxc3QgUXUuICBNZWRpYW4gICAgTWVhbiAzcmQgUXUuICAgIE1heC4gICAgTkEncyBcbiAwLjAwMDAgIDAuNTU1MCAgMC42ODY2ICAwLjY2ODYgIDAuODA3OSAgMS4wMDAwICAgICA0MjQgXG4ifQ== -->
-<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
- 0.0000  0.5550  0.6866  0.6686  0.8079  1.0000     424 </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtbWFyeShmdWxsX2RhdGEkb3Bwc2l6ZV9ub3JtKVxuYGBgIn0= -->
-<pre class="r"><code>summary(full_data$oppsize_norm)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgTWluLiAxc3QgUXUuICBNZWRpYW4gICAgTWVhbiAzcmQgUXUuICAgIE1heC4gICAgTkEncyBcbiAwLjAwMDAgIDAuMzIzMSAgMC40NzIyICAwLjQ4MjIgIDAuNjQ2OSAgMS4wMDAwICAgICA0MjcgXG4ifQ== -->
-<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
- 0.0000  0.3231  0.4722  0.4822  0.6469  1.0000     427 </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjcmVhdGUgYSB2YXJpYWJsZSBvZiByYXRpbyBvZiBvcHBvc2l0aW9uIHRvIHN1cHBvcnQgZ3JvdXAgc2l6ZVxuXG5mdWxsX2RhdGEkb3BwX3N1cHBfcmF0aW8gPC0gZnVsbF9kYXRhJG9wcHNpemVfbm9ybSAvIGZ1bGxfZGF0YSRzdXBwc2l6ZV9ub3JtXG5zdW1tYXJ5KGZ1bGxfZGF0YSRvcHBfc3VwcF9yYXRpbylcbmBgYCJ9 -->
-<pre class="r"><code># create a variable of ratio of opposition to support group size
-
-full_data$opp_supp_ratio &lt;- full_data$oppsize_norm / full_data$suppsize_norm
-summary(full_data$opp_supp_ratio)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgTWluLiAxc3QgUXUuICBNZWRpYW4gICAgTWVhbiAzcmQgUXUuICAgIE1heC4gICAgTkEncyBcbiAwLjAwMDAgIDAuNDQxOCAgMC42OTE4ICAgICBJbmYgIDEuMTAxMSAgICAgSW5mICAgICA0MjcgXG4ifQ== -->
-<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
- 0.0000  0.4418  0.6918     Inf  1.1011     Inf     427 </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjcmVhdGUgdmFyaWFibGUgb2YgcmF0aW8gb2Ygc3VwcG9ydCBzaXplIHNjb3JlIHRvIFcgc2NvcmVcbiMgXG5cbmZ1bGxfZGF0YSRzdXBwX1dfcmF0aW8gPC0gZnVsbF9kYXRhJHN1cHBzaXplX25vcm0gLyBmdWxsX2RhdGEkV19ub3JtXG5zdW1tYXJ5KGZ1bGxfZGF0YSRzdXBwX1dfcmF0aW8pXG5gYGAifQ== -->
-<pre class="r"><code># create variable of ratio of support size score to W score
-# 
-
-full_data$supp_W_ratio &lt;- full_data$suppsize_norm / full_data$W_norm
-summary(full_data$supp_W_ratio)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgTWluLiAxc3QgUXUuICBNZWRpYW4gICAgTWVhbiAzcmQgUXUuICAgIE1heC4gICAgTkEncyBcbiAwLjAwMDAgIDAuOTE0NyAgMS4xMDIxICAyLjEyMDIgIDIuMDkzOSAyNy4zMTk1ICAgICA4MzYgXG4ifQ== -->
-<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
- 0.0000  0.9147  1.1021  2.1202  2.0939 27.3195     836 </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjcmVhdGUgdmFyaWFibGUgb2YgcmF0aW8gb2Ygb3Bwb3NpdGlvbiB0byBXXG5cbmZ1bGxfZGF0YSRvcHBfV19yYXRpbyA8LSBmdWxsX2RhdGEkb3Bwc2l6ZV9ub3JtIC8gZnVsbF9kYXRhJFdfbm9ybVxuc3VtbWFyeShmdWxsX2RhdGEkb3BwX1dfcmF0aW8pXG5gYGAifQ== -->
-<pre class="r"><code># create variable of ratio of opposition to W
-
-full_data$opp_W_ratio &lt;- full_data$oppsize_norm / full_data$W_norm
-summary(full_data$opp_W_ratio)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgTWluLiAxc3QgUXUuICBNZWRpYW4gICAgTWVhbiAzcmQgUXUuICAgIE1heC4gICAgTkEncyBcbiAwLjAwMDAgIDAuNDUxOCAgMS4xMDcxICAxLjYzMTIgIDIuMTMzNyA4MS40NTA1ICAgICA4MzkgXG4ifQ== -->
-<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
- 0.0000  0.4518  1.1071  1.6312  2.1337 81.4505     839 </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBjcmVhdGUgZGF0YWZyYW1lIHdpdGgganVzdCBub24tZGVtb2NyYWN0aWMgc3VwcG9ydGVyIHN0YXRlc1xuIyBcblxuZnVsbF9kYXRhJHN1cHBfYXV0b2NyYXRpYyA8LSBpZmVsc2UoZnVsbF9kYXRhJHN1cHBvcnRlcl9wb2xpdHkgPCA1LDEsMClcbnN1bW1hcnkoZnVsbF9kYXRhJHN1cHBfYXV0b2NyYXRpYylcbmBgYCJ9 -->
-<pre class="r"><code># create dataframe with just non-democractic supporter states
-# 
-
-full_data$supp_autocratic &lt;- ifelse(full_data$supporter_polity &lt; 5,1,0)
-summary(full_data$supp_autocratic)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgTWluLiAxc3QgUXUuICBNZWRpYW4gICAgTWVhbiAzcmQgUXUuICAgIE1heC4gICAgTkEncyBcbiAgMC4wMDAgICAwLjAwMCAgIDEuMDAwICAgMC41OTcgICAxLjAwMCAgIDEuMDAwICAgICA4MTMgXG4ifQ== -->
-<pre><code>   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
-  0.000   0.000   1.000   0.597   1.000   1.000     813 </code></pre>
+ 0.0000  0.0000  0.0000  0.4381  1.0000  1.0000     813 </code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYXV0b2NyYWNpZXNfZGF0YSA8LSBmdWxsX2RhdGFbd2hpY2goZnVsbF9kYXRhJHN1cHBfYXV0b2NyYXRpYyA9PSAxKSxdXG5cblxuYGBgIn0= -->
 <pre class="r"><code>autocracies_data &lt;- full_data[which(full_data$supp_autocratic == 1),]
@@ -2004,325 +1911,51 @@ summary(full_data$supp_autocratic)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuXG5saWJyYXJ5KE1BU1MpXG5cbiMgbW9kZWxzIHdpdGgganVzdCBvcHBvc2l0aW9uIGFuZCBzdXBwb3J0IGdyb3VwIHNpemVzXG4jIFxuXG5tb2RlbF9vcHBvc2l0aW9uIDwtIGdsbS5uYih0YXJnX2RlbW9jcmF0aWMgfiBvcHBzaXplX25vcm0gKyBzdXBwb3J0ZXJfcG9saXR5LCBkYXRhID0gYXV0b2NyYWNpZXNfZGF0YSlcbmBgYCJ9 -->
-<pre class="r"><code>
-library(MASS)
-
-# models with just opposition and support group sizes
-# 
-
-model_opposition &lt;- glm.nb(targ_democratic ~ oppsize_norm + supporter_polity, data = autocracies_data)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW9kZWxfb3Bwb3NpdGlvblRyYWluQ2FtcCA8LSBnbG0ubmIoTnVtX1NfVHJhaW5DYW1wIH4gdGFyZ19kZW1vY3JhdGljICsgb3Bwc2l6ZV9ub3JtICsgV2FyT25UZXJyb3IgKyBDb2xkV2FyLCBkYXRhID0gYXV0b2NyYWNpZXNfZGF0YSlcbnN1bW1hcnkobW9kZWxfb3Bwb3NpdGlvblRyYWluQ2FtcClcblxuYGBgIn0= -->
+<pre class="r"><code>model_oppositionTrainCamp &lt;- glm.nb(Num_S_TrainCamp ~ targ_democratic + oppsize_norm + WarOnTerror + ColdWar, data = autocracies_data)
+summary(model_oppositionTrainCamp)
+</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogaXRlcmF0aW9uIGxpbWl0IHJlYWNoZWRXYXJuaW5nOiBpdGVyYXRpb24gbGltaXQgcmVhY2hlZFxuIn0= -->
-<pre><code>Warning: iteration limit reachedWarning: iteration limit reached</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtbWFyeShtb2RlbF9vcHBvc2l0aW9uKVxuYGBgIn0= -->
-<pre class="r"><code>summary(model_opposition)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxuZ2xtLm5iKGZvcm11bGEgPSB0YXJnX2RlbW9jcmF0aWMgfiBvcHBzaXplX25vcm0gKyBzdXBwb3J0ZXJfcG9saXR5LCBcbiAgICBkYXRhID0gYXV0b2NyYWNpZXNfZGF0YSwgaW5pdC50aGV0YSA9IDczMTIuNDA2NDcyLCBsaW5rID0gbG9nKVxuXG5EZXZpYW5jZSBSZXNpZHVhbHM6IFxuICAgIE1pbiAgICAgICAxUSAgIE1lZGlhbiAgICAgICAzUSAgICAgIE1heCAgXG4tMC44NDM2ICAtMC43NDM1ICAtMC43MDQ1ICAgMC45NzQ4ICAgMS4yNjk1ICBcblxuQ29lZmZpY2llbnRzOlxuICAgICAgICAgICAgICAgICAgRXN0aW1hdGUgU3RkLiBFcnJvciB6IHZhbHVlIFByKD58enwpICAgIFxuKEludGVyY2VwdCkgICAgICAtMS42NDE0OTYgICAwLjA4MTY3OSAtMjAuMDk3ICA8IDJlLTE2ICoqKlxub3Bwc2l6ZV9ub3JtICAgICAgMC41Mzg0MDggICAwLjEzNDY0OSAgIDMuOTk5IDYuMzdlLTA1ICoqKlxuc3VwcG9ydGVyX3BvbGl0eSAtMC4wMDEyNTcgICAwLjAwMTI1OSAgLTAuOTk4ICAgIDAuMzE4ICAgIFxuLS0tXG5TaWduaWYuIGNvZGVzOiAgMCDigJgqKirigJkgMC4wMDEg4oCYKirigJkgMC4wMSDigJgq4oCZIDAuMDUg4oCYLuKAmSAwLjEg4oCYIOKAmSAxXG5cbihEaXNwZXJzaW9uIHBhcmFtZXRlciBmb3IgTmVnYXRpdmUgQmlub21pYWwoNzMxMi40MDcpIGZhbWlseSB0YWtlbiB0byBiZSAxKVxuXG4gICAgTnVsbCBkZXZpYW5jZTogNDI5MS44ICBvbiA2MDg3ICBkZWdyZWVzIG9mIGZyZWVkb21cblJlc2lkdWFsIGRldmlhbmNlOiA0MjczLjkgIG9uIDYwODUgIGRlZ3JlZXMgb2YgZnJlZWRvbVxuICAoNDU2IG9ic2VydmF0aW9ucyBkZWxldGVkIGR1ZSB0byBtaXNzaW5nbmVzcylcbkFJQzogNzUzMC4yXG5cbk51bWJlciBvZiBGaXNoZXIgU2NvcmluZyBpdGVyYXRpb25zOiAxXG5cblxuICAgICAgICAgICAgICBUaGV0YTogIDczMTIgXG4gICAgICAgICAgU3RkLiBFcnIuOiAgMTYyNzAgXG5XYXJuaW5nIHdoaWxlIGZpdHRpbmcgdGhldGE6IGl0ZXJhdGlvbiBsaW1pdCByZWFjaGVkIFxuXG4gMiB4IGxvZy1saWtlbGlob29kOiAgLTc1MjIuMTU5IFxuIn0= -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxuZ2xtLm5iKGZvcm11bGEgPSBOdW1fU19UcmFpbkNhbXAgfiB0YXJnX2RlbW9jcmF0aWMgKyBvcHBzaXplX25vcm0gKyBcbiAgICBXYXJPblRlcnJvciArIENvbGRXYXIsIGRhdGEgPSBhdXRvY3JhY2llc19kYXRhLCBpbml0LnRoZXRhID0gMi43NTE1NDQ3NjQsIFxuICAgIGxpbmsgPSBsb2cpXG5cbkRldmlhbmNlIFJlc2lkdWFsczogXG4gICAgTWluICAgICAgIDFRICAgTWVkaWFuICAgICAgIDNRICAgICAgTWF4ICBcbi0wLjgyMzEgIC0wLjU4NzQgIC0wLjQ5NTUgIC0wLjQwNjUgICAyLjk0MDggIFxuXG5Db2VmZmljaWVudHM6XG4gICAgICAgICAgICAgICAgRXN0aW1hdGUgU3RkLiBFcnJvciB6IHZhbHVlIFByKD58enwpICAgIFxuKEludGVyY2VwdCkgICAgIC0yLjkxNTQyICAgIDAuMTYzNTkgLTE3LjgyMiAgPCAyZS0xNiAqKipcbnRhcmdfZGVtb2NyYXRpYyAtMC4xNDEyOCAgICAwLjA5MDkwICAtMS41NTQgMC4xMjAxMzggICAgXG5vcHBzaXplX25vcm0gICAgIDEuODIzMDggICAgMC4yMjMwMCAgIDguMTc1IDIuOTVlLTE2ICoqKlxuV2FyT25UZXJyb3IgICAgIC0wLjYzMzk1ICAgIDAuMTY4NDEgIC0zLjc2NCAwLjAwMDE2NyAqKipcbkNvbGRXYXIgICAgICAgICAgMC4xMzk4OSAgICAwLjA5NTIxICAgMS40NjkgMC4xNDE3NjggICAgXG4tLS1cblNpZ25pZi4gY29kZXM6ICAwIOKAmCoqKuKAmSAwLjAwMSDigJgqKuKAmSAwLjAxIOKAmCrigJkgMC4wNSDigJgu4oCZIDAuMSDigJgg4oCZIDFcblxuKERpc3BlcnNpb24gcGFyYW1ldGVyIGZvciBOZWdhdGl2ZSBCaW5vbWlhbCgyLjc1MTUpIGZhbWlseSB0YWtlbiB0byBiZSAxKVxuXG4gICAgTnVsbCBkZXZpYW5jZTogMjUwOC45ICBvbiA0NDI2ICBkZWdyZWVzIG9mIGZyZWVkb21cblJlc2lkdWFsIGRldmlhbmNlOiAyNDA2LjggIG9uIDQ0MjIgIGRlZ3JlZXMgb2YgZnJlZWRvbVxuICAoMzc1IG9ic2VydmF0aW9ucyBkZWxldGVkIGR1ZSB0byBtaXNzaW5nbmVzcylcbkFJQzogMzg3NS40XG5cbk51bWJlciBvZiBGaXNoZXIgU2NvcmluZyBpdGVyYXRpb25zOiAxXG5cblxuICAgICAgICAgICAgICBUaGV0YTogIDIuNzUgXG4gICAgICAgICAgU3RkLiBFcnIuOiAgMS4yNSBcblxuIDIgeCBsb2ctbGlrZWxpaG9vZDogIC0zODYzLjQyNCBcbiJ9 -->
 <pre><code>
 Call:
-glm.nb(formula = targ_democratic ~ oppsize_norm + supporter_polity, 
-    data = autocracies_data, init.theta = 7312.406472, link = log)
-
-Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--0.8436  -0.7435  -0.7045   0.9748   1.2695  
-
-Coefficients:
-                  Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)      -1.641496   0.081679 -20.097  &lt; 2e-16 ***
-oppsize_norm      0.538408   0.134649   3.999 6.37e-05 ***
-supporter_polity -0.001257   0.001259  -0.998    0.318    
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-(Dispersion parameter for Negative Binomial(7312.407) family taken to be 1)
-
-    Null deviance: 4291.8  on 6087  degrees of freedom
-Residual deviance: 4273.9  on 6085  degrees of freedom
-  (456 observations deleted due to missingness)
-AIC: 7530.2
-
-Number of Fisher Scoring iterations: 1
-
-              Theta:  7312 
-          Std. Err.:  16270 
-Warning while fitting theta: iteration limit reached 
-
- 2 x log-likelihood:  -7522.159 </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuICAgICAgICBcbm1vZGVsX3N1cHBvcnQgPC0gZ2xtLm5iKHRhcmdfZGVtb2NyYXRpYyB+IHN1cHBzaXplX25vcm0gKyBzdXBwb3J0ZXJfcG9saXR5LCBkYXRhID0gYXV0b2NyYWNpZXNfZGF0YSlcbmBgYCJ9 -->
-<pre class="r"><code>        
-model_support &lt;- glm.nb(targ_democratic ~ suppsize_norm + supporter_polity, data = autocracies_data)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogaXRlcmF0aW9uIGxpbWl0IHJlYWNoZWRXYXJuaW5nOiBpdGVyYXRpb24gbGltaXQgcmVhY2hlZFxuIn0= -->
-<pre><code>Warning: iteration limit reachedWarning: iteration limit reached</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtbWFyeShtb2RlbF9zdXBwb3J0KVxuYGBgIn0= -->
-<pre class="r"><code>summary(model_support)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxuZ2xtLm5iKGZvcm11bGEgPSB0YXJnX2RlbW9jcmF0aWMgfiBzdXBwc2l6ZV9ub3JtICsgc3VwcG9ydGVyX3BvbGl0eSwgXG4gICAgZGF0YSA9IGF1dG9jcmFjaWVzX2RhdGEsIGluaXQudGhldGEgPSA3MzYxLjE1MDE5NywgbGluayA9IGxvZylcblxuRGV2aWFuY2UgUmVzaWR1YWxzOiBcbiAgICBNaW4gICAgICAgMVEgICBNZWRpYW4gICAgICAgM1EgICAgICBNYXggIFxuLTAuODEyMCAgLTAuNzM1NiAgLTAuNzE4NiAgIDEuMDIzOSAgIDEuMTU3NCAgXG5cbkNvZWZmaWNpZW50czpcbiAgICAgICAgICAgICAgICAgIEVzdGltYXRlIFN0ZC4gRXJyb3IgeiB2YWx1ZSBQcig+fHp8KSAgICBcbihJbnRlcmNlcHQpICAgICAgLTEuMTcwNzQxICAgMC4wOTIxNDIgLTEyLjcwNiAgIDwyZS0xNiAqKipcbnN1cHBzaXplX25vcm0gICAgLTAuMjc4MjY1ICAgMC4xNDQyNDQgIC0xLjkyOSAgIDAuMDUzNyAuICBcbnN1cHBvcnRlcl9wb2xpdHkgLTAuMDAxMzM4ICAgMC4wMDEyNzggIC0xLjA0NiAgIDAuMjk1NCAgICBcbi0tLVxuU2lnbmlmLiBjb2RlczogIDAg4oCYKioq4oCZIDAuMDAxIOKAmCoq4oCZIDAuMDEg4oCYKuKAmSAwLjA1IOKAmC7igJkgMC4xIOKAmCDigJkgMVxuXG4oRGlzcGVyc2lvbiBwYXJhbWV0ZXIgZm9yIE5lZ2F0aXZlIEJpbm9taWFsKDczNjEuMTUpIGZhbWlseSB0YWtlbiB0byBiZSAxKVxuXG4gICAgTnVsbCBkZXZpYW5jZTogNDI5MS44ICBvbiA2MDg3ICBkZWdyZWVzIG9mIGZyZWVkb21cblJlc2lkdWFsIGRldmlhbmNlOiA0Mjg2LjMgIG9uIDYwODUgIGRlZ3JlZXMgb2YgZnJlZWRvbVxuICAoNDU2IG9ic2VydmF0aW9ucyBkZWxldGVkIGR1ZSB0byBtaXNzaW5nbmVzcylcbkFJQzogNzU0Mi42XG5cbk51bWJlciBvZiBGaXNoZXIgU2NvcmluZyBpdGVyYXRpb25zOiAxXG5cblxuICAgICAgICAgICAgICBUaGV0YTogIDczNjEgXG4gICAgICAgICAgU3RkLiBFcnIuOiAgMTY0OTAgXG5XYXJuaW5nIHdoaWxlIGZpdHRpbmcgdGhldGE6IGl0ZXJhdGlvbiBsaW1pdCByZWFjaGVkIFxuXG4gMiB4IGxvZy1saWtlbGlob29kOiAgLTc1MzQuNTY0IFxuIn0= -->
-<pre><code>
-Call:
-glm.nb(formula = targ_democratic ~ suppsize_norm + supporter_polity, 
-    data = autocracies_data, init.theta = 7361.150197, link = log)
-
-Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--0.8120  -0.7356  -0.7186   1.0239   1.1574  
-
-Coefficients:
-                  Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)      -1.170741   0.092142 -12.706   &lt;2e-16 ***
-suppsize_norm    -0.278265   0.144244  -1.929   0.0537 .  
-supporter_polity -0.001338   0.001278  -1.046   0.2954    
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-(Dispersion parameter for Negative Binomial(7361.15) family taken to be 1)
-
-    Null deviance: 4291.8  on 6087  degrees of freedom
-Residual deviance: 4286.3  on 6085  degrees of freedom
-  (456 observations deleted due to missingness)
-AIC: 7542.6
-
-Number of Fisher Scoring iterations: 1
-
-              Theta:  7361 
-          Std. Err.:  16490 
-Warning while fitting theta: iteration limit reached 
-
- 2 x log-likelihood:  -7534.564 </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuICAgICAgICBcblxuXG4jIyBNb2RlbCBXIC0ganVzdCB0aGUgZWZmZWN0IG9mIFdcbiMjIFxuXG5tb2RlbHcgPC0gZ2xtLm5iKHRhcmdfZGVtb2NyYXRpYyB+IFdfbm9ybSwgZGF0YSA9IGF1dG9jcmFjaWVzX2RhdGEpXG5gYGAifQ== -->
-<pre class="r"><code>        
-
-
-## Model W - just the effect of W
-## 
-
-modelw &lt;- glm.nb(targ_democratic ~ W_norm, data = autocracies_data)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogaXRlcmF0aW9uIGxpbWl0IHJlYWNoZWRXYXJuaW5nOiBpdGVyYXRpb24gbGltaXQgcmVhY2hlZFxuIn0= -->
-<pre><code>Warning: iteration limit reachedWarning: iteration limit reached</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtbWFyeShtb2RlbHcpXG5gYGAifQ== -->
-<pre class="r"><code>summary(modelw)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxuZ2xtLm5iKGZvcm11bGEgPSB0YXJnX2RlbW9jcmF0aWMgfiBXX25vcm0sIGRhdGEgPSBhdXRvY3JhY2llc19kYXRhLCBcbiAgICBpbml0LnRoZXRhID0gNzc0Ni4yNTQzMTcsIGxpbmsgPSBsb2cpXG5cbkRldmlhbmNlIFJlc2lkdWFsczogXG4gICAgTWluICAgICAgIDFRICAgTWVkaWFuICAgICAgIDNRICAgICAgTWF4ICBcbi0wLjgxNDggIC0wLjc2NjEgIC0wLjcxOTQgICAwLjk2OTMgICAxLjIzMDIgIFxuXG5Db2VmZmljaWVudHM6XG4gICAgICAgICAgICBFc3RpbWF0ZSBTdGQuIEVycm9yIHogdmFsdWUgUHIoPnx6fCkgICAgXG4oSW50ZXJjZXB0KSAtMS4wOTY4NCAgICAwLjA1MjczIC0yMC44MDEgIDwgMmUtMTYgKioqXG5XX25vcm0gICAgICAtMC41MzgyMSAgICAwLjE0MTcyICAtMy43OTggMC4wMDAxNDYgKioqXG4tLS1cblNpZ25pZi4gY29kZXM6ICAwIOKAmCoqKuKAmSAwLjAwMSDigJgqKuKAmSAwLjAxIOKAmCrigJkgMC4wNSDigJgu4oCZIDAuMSDigJgg4oCZIDFcblxuKERpc3BlcnNpb24gcGFyYW1ldGVyIGZvciBOZWdhdGl2ZSBCaW5vbWlhbCg3NzQ2LjI1NCkgZmFtaWx5IHRha2VuIHRvIGJlIDEpXG5cbiAgICBOdWxsIGRldmlhbmNlOiA0MTg0LjYgIG9uIDU4NzYgIGRlZ3JlZXMgb2YgZnJlZWRvbVxuUmVzaWR1YWwgZGV2aWFuY2U6IDQxNzAuMCAgb24gNTg3NSAgZGVncmVlcyBvZiBmcmVlZG9tXG4gICg2Njcgb2JzZXJ2YXRpb25zIGRlbGV0ZWQgZHVlIHRvIG1pc3NpbmduZXNzKVxuQUlDOiA3NDUwLjJcblxuTnVtYmVyIG9mIEZpc2hlciBTY29yaW5nIGl0ZXJhdGlvbnM6IDFcblxuXG4gICAgICAgICAgICAgIFRoZXRhOiAgNzc0NiBcbiAgICAgICAgICBTdGQuIEVyci46ICAxNzMwMyBcbldhcm5pbmcgd2hpbGUgZml0dGluZyB0aGV0YTogaXRlcmF0aW9uIGxpbWl0IHJlYWNoZWQgXG5cbiAyIHggbG9nLWxpa2VsaWhvb2Q6ICAtNzQ0NC4yNDMgXG4ifQ== -->
-<pre><code>
-Call:
-glm.nb(formula = targ_democratic ~ W_norm, data = autocracies_data, 
-    init.theta = 7746.254317, link = log)
-
-Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--0.8148  -0.7661  -0.7194   0.9693   1.2302  
-
-Coefficients:
-            Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept) -1.09684    0.05273 -20.801  &lt; 2e-16 ***
-W_norm      -0.53821    0.14172  -3.798 0.000146 ***
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-(Dispersion parameter for Negative Binomial(7746.254) family taken to be 1)
-
-    Null deviance: 4184.6  on 5876  degrees of freedom
-Residual deviance: 4170.0  on 5875  degrees of freedom
-  (667 observations deleted due to missingness)
-AIC: 7450.2
-
-Number of Fisher Scoring iterations: 1
-
-              Theta:  7746 
-          Std. Err.:  17303 
-Warning while fitting theta: iteration limit reached 
-
- 2 x log-likelihood:  -7444.243 </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI3JhdGlvIG9mIGFjdHVhbCBzdXBwb3J0IHRvIFcgLSBob3cgY2xvc2UgYXJlIHRoZXkgdG8gYSB0cnVseSBtaW5pbWFsIHdpbm5pbmcgY29hbGl0aW9uXG4jXG5tb2RlbDEgPC0gZ2xtLm5iKHRhcmdfZGVtb2NyYXRpYyB+IHN1cHBfV19yYXRpbyArIHN1cHBvcnRlcl9wb2xpdHksIGRhdGEgPSBhdXRvY3JhY2llc19kYXRhKVxuYGBgIn0= -->
-<pre class="r"><code>#ratio of actual support to W - how close are they to a truly minimal winning coalition
-#
-model1 &lt;- glm.nb(targ_democratic ~ supp_W_ratio + supporter_polity, data = autocracies_data)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogaXRlcmF0aW9uIGxpbWl0IHJlYWNoZWRXYXJuaW5nOiBpdGVyYXRpb24gbGltaXQgcmVhY2hlZFxuIn0= -->
-<pre><code>Warning: iteration limit reachedWarning: iteration limit reached</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtbWFyeShtb2RlbDEpXG5gYGAifQ== -->
-<pre class="r"><code>summary(model1)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxuZ2xtLm5iKGZvcm11bGEgPSB0YXJnX2RlbW9jcmF0aWMgfiBzdXBwX1dfcmF0aW8gKyBzdXBwb3J0ZXJfcG9saXR5LCBcbiAgICBkYXRhID0gYXV0b2NyYWNpZXNfZGF0YSwgaW5pdC50aGV0YSA9IDc1NTUuNjI3MTU4LCBsaW5rID0gbG9nKVxuXG5EZXZpYW5jZSBSZXNpZHVhbHM6IFxuICAgIE1pbiAgICAgICAxUSAgIE1lZGlhbiAgICAgICAzUSAgICAgIE1heCAgXG4tMC45ODcxICAtMC43MzgxICAtMC43MjEyICAgMS4wMDQyICAgMS4xMjIyICBcblxuQ29lZmZpY2llbnRzOlxuICAgICAgICAgICAgICAgICAgRXN0aW1hdGUgU3RkLiBFcnJvciB6IHZhbHVlIFByKD58enwpICAgIFxuKEludGVyY2VwdCkgICAgICAtMS4zODYyMjcgICAwLjA0MDY0MSAtMzQuMTA5ICAgPDJlLTE2ICoqKlxuc3VwcF9XX3JhdGlvICAgICAgMC4wMjM5NDAgICAwLjAwOTc4OSAgIDIuNDQ1ICAgMC4wMTQ1ICogIFxuc3VwcG9ydGVyX3BvbGl0eSAtMC4wMDE4NzggICAwLjAwMTI3MCAgLTEuNDc5ICAgMC4xMzkyICAgIFxuLS0tXG5TaWduaWYuIGNvZGVzOiAgMCDigJgqKirigJkgMC4wMDEg4oCYKirigJkgMC4wMSDigJgq4oCZIDAuMDUg4oCYLuKAmSAwLjEg4oCYIOKAmSAxXG5cbihEaXNwZXJzaW9uIHBhcmFtZXRlciBmb3IgTmVnYXRpdmUgQmlub21pYWwoNzU1NS42MjcpIGZhbWlseSB0YWtlbiB0byBiZSAxKVxuXG4gICAgTnVsbCBkZXZpYW5jZTogNDAzMS43ICBvbiA1NjkxICBkZWdyZWVzIG9mIGZyZWVkb21cblJlc2lkdWFsIGRldmlhbmNlOiA0MDI0LjYgIG9uIDU2ODkgIGRlZ3JlZXMgb2YgZnJlZWRvbVxuICAoODUyIG9ic2VydmF0aW9ucyBkZWxldGVkIGR1ZSB0byBtaXNzaW5nbmVzcylcbkFJQzogNzEzMC44XG5cbk51bWJlciBvZiBGaXNoZXIgU2NvcmluZyBpdGVyYXRpb25zOiAxXG5cblxuICAgICAgICAgICAgICBUaGV0YTogIDc1NTYgXG4gICAgICAgICAgU3RkLiBFcnIuOiAgMTczNzggXG5XYXJuaW5nIHdoaWxlIGZpdHRpbmcgdGhldGE6IGl0ZXJhdGlvbiBsaW1pdCByZWFjaGVkIFxuXG4gMiB4IGxvZy1saWtlbGlob29kOiAgLTcxMjIuNzk4IFxuIn0= -->
-<pre><code>
-Call:
-glm.nb(formula = targ_democratic ~ supp_W_ratio + supporter_polity, 
-    data = autocracies_data, init.theta = 7555.627158, link = log)
-
-Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--0.9871  -0.7381  -0.7212   1.0042   1.1222  
-
-Coefficients:
-                  Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)      -1.386227   0.040641 -34.109   &lt;2e-16 ***
-supp_W_ratio      0.023940   0.009789   2.445   0.0145 *  
-supporter_polity -0.001878   0.001270  -1.479   0.1392    
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-(Dispersion parameter for Negative Binomial(7555.627) family taken to be 1)
-
-    Null deviance: 4031.7  on 5691  degrees of freedom
-Residual deviance: 4024.6  on 5689  degrees of freedom
-  (852 observations deleted due to missingness)
-AIC: 7130.8
-
-Number of Fisher Scoring iterations: 1
-
-              Theta:  7556 
-          Std. Err.:  17378 
-Warning while fitting theta: iteration limit reached 
-
- 2 x log-likelihood:  -7122.798 </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyByYXRpbyBvZiBvcHBvbmVudCBzaXplIHRvIFcgLSBob3cgY2xvc2UgYXJlIHRoZSBvcHBvc2l0aW9uIHRvIGhhdmluZyBhIG1pbmltYWwgd2lubmluZyBjb2FsaXRpb24gb2YgdGhlaXIgb3duXG5cbm1vZGVsMiA8LSBnbG0ubmIodGFyZ19kZW1vY3JhdGljIH4gb3BwX1dfcmF0aW8gKyBzdXBwb3J0ZXJfcG9saXR5LCBkYXRhID0gYXV0b2NyYWNpZXNfZGF0YSlcbmBgYCJ9 -->
-<pre class="r"><code># ratio of opponent size to W - how close are the opposition to having a minimal winning coalition of their own
-
-model2 &lt;- glm.nb(targ_democratic ~ opp_W_ratio + supporter_polity, data = autocracies_data)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogaXRlcmF0aW9uIGxpbWl0IHJlYWNoZWRXYXJuaW5nOiBpdGVyYXRpb24gbGltaXQgcmVhY2hlZFxuIn0= -->
-<pre><code>Warning: iteration limit reachedWarning: iteration limit reached</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtbWFyeShtb2RlbDIpXG5gYGAifQ== -->
-<pre class="r"><code>summary(model2)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxuZ2xtLm5iKGZvcm11bGEgPSB0YXJnX2RlbW9jcmF0aWMgfiBvcHBfV19yYXRpbyArIHN1cHBvcnRlcl9wb2xpdHksIFxuICAgIGRhdGEgPSBhdXRvY3JhY2llc19kYXRhLCBpbml0LnRoZXRhID0gNzU3MS45MjMyMzYsIGxpbmsgPSBsb2cpXG5cbkRldmlhbmNlIFJlc2lkdWFsczogXG4gICAgTWluICAgICAgIDFRICAgTWVkaWFuICAgICAgIDNRICAgICAgTWF4ICBcbi0wLjk3NzkgIC0wLjczNjEgIC0wLjczMTIgICAxLjAxNzkgICAxLjA5NjQgIFxuXG5Db2VmZmljaWVudHM6XG4gICAgICAgICAgICAgICAgICBFc3RpbWF0ZSBTdGQuIEVycm9yIHogdmFsdWUgUHIoPnx6fCkgICAgXG4oSW50ZXJjZXB0KSAgICAgIC0xLjMzNzYzMyAgIDAuMDMyNTE4IC00MS4xMzUgICA8MmUtMTYgKioqXG5vcHBfV19yYXRpbyAgICAgICAwLjAwNzIyNyAgIDAuMDA1NDM1ICAgMS4zMzAgICAgMC4xODQgICAgXG5zdXBwb3J0ZXJfcG9saXR5IC0wLjAwMTU5NiAgIDAuMDAxMjU4ICAtMS4yNjkgICAgMC4yMDQgICAgXG4tLS1cblNpZ25pZi4gY29kZXM6ICAwIOKAmCoqKuKAmSAwLjAwMSDigJgqKuKAmSAwLjAxIOKAmCrigJkgMC4wNSDigJgu4oCZIDAuMSDigJgg4oCZIDFcblxuKERpc3BlcnNpb24gcGFyYW1ldGVyIGZvciBOZWdhdGl2ZSBCaW5vbWlhbCg3NTcxLjkyMykgZmFtaWx5IHRha2VuIHRvIGJlIDEpXG5cbiAgICBOdWxsIGRldmlhbmNlOiA0MDMxLjcgIG9uIDU2OTEgIGRlZ3JlZXMgb2YgZnJlZWRvbVxuUmVzaWR1YWwgZGV2aWFuY2U6IDQwMjguNiAgb24gNTY4OSAgZGVncmVlcyBvZiBmcmVlZG9tXG4gICg4NTIgb2JzZXJ2YXRpb25zIGRlbGV0ZWQgZHVlIHRvIG1pc3NpbmduZXNzKVxuQUlDOiA3MTM0LjlcblxuTnVtYmVyIG9mIEZpc2hlciBTY29yaW5nIGl0ZXJhdGlvbnM6IDFcblxuXG4gICAgICAgICAgICAgIFRoZXRhOiAgNzU3MiBcbiAgICAgICAgICBTdGQuIEVyci46ICAxNzQ1OCBcbldhcm5pbmcgd2hpbGUgZml0dGluZyB0aGV0YTogaXRlcmF0aW9uIGxpbWl0IHJlYWNoZWQgXG5cbiAyIHggbG9nLWxpa2VsaWhvb2Q6ICAtNzEyNi44NSBcbiJ9 -->
-<pre><code>
-Call:
-glm.nb(formula = targ_democratic ~ opp_W_ratio + supporter_polity, 
-    data = autocracies_data, init.theta = 7571.923236, link = log)
-
-Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--0.9779  -0.7361  -0.7312   1.0179   1.0964  
-
-Coefficients:
-                  Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)      -1.337633   0.032518 -41.135   &lt;2e-16 ***
-opp_W_ratio       0.007227   0.005435   1.330    0.184    
-supporter_polity -0.001596   0.001258  -1.269    0.204    
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-(Dispersion parameter for Negative Binomial(7571.923) family taken to be 1)
-
-    Null deviance: 4031.7  on 5691  degrees of freedom
-Residual deviance: 4028.6  on 5689  degrees of freedom
-  (852 observations deleted due to missingness)
-AIC: 7134.9
-
-Number of Fisher Scoring iterations: 1
-
-              Theta:  7572 
-          Std. Err.:  17458 
-Warning while fitting theta: iteration limit reached 
-
- 2 x log-likelihood:  -7126.85 </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyByYXRpbyBvZiBvcHBvc2l0aW9uIHRvIHN1cHBvcnRlcnMgLSBoZWFkIHRvIGhlYWQgbWF0Y2ggdXBcblxubW9kZWwzIDwtIGdsbS5uYih0YXJnX2RlbW9jcmF0aWMgfiBvcHBfc3VwcF9yYXRpbyArIHN1cHBvcnRlcl9wb2xpdHksIGRhdGEgPSBhdXRvY3JhY2llc19kYXRhKVxuYGBgIn0= -->
-<pre class="r"><code># ratio of opposition to supporters - head to head match up
-
-model3 &lt;- glm.nb(targ_democratic ~ opp_supp_ratio + supporter_polity, data = autocracies_data)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogaXRlcmF0aW9uIGxpbWl0IHJlYWNoZWRXYXJuaW5nOiBpdGVyYXRpb24gbGltaXQgcmVhY2hlZFxuIn0= -->
-<pre><code>Warning: iteration limit reachedWarning: iteration limit reached</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtbWFyeShtb2RlbDMpXG5gYGAifQ== -->
-<pre class="r"><code>summary(model3)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxuZ2xtLm5iKGZvcm11bGEgPSB0YXJnX2RlbW9jcmF0aWMgfiBvcHBfc3VwcF9yYXRpbyArIHN1cHBvcnRlcl9wb2xpdHksIFxuICAgIGRhdGEgPSBhdXRvY3JhY2llc19kYXRhLCBpbml0LnRoZXRhID0gNzM1OS4wNzQ2OTcsIGxpbmsgPSBsb2cpXG5cbkRldmlhbmNlIFJlc2lkdWFsczogXG4gICAgTWluICAgICAgIDFRICAgTWVkaWFuICAgICAgIDNRICAgICAgTWF4ICBcbi0wLjg5MzAgIC0wLjczMjcgIC0wLjcxMjAgICAxLjAwODAgICAxLjE1MDUgIFxuXG5Db2VmZmljaWVudHM6XG4gICAgICAgICAgICAgICAgICBFc3RpbWF0ZSBTdGQuIEVycm9yIHogdmFsdWUgUHIoPnx6fCkgICAgXG4oSW50ZXJjZXB0KSAgICAgIC0xLjQzOTk1MCAgIDAuMDQ4NTIxIC0yOS42NzcgIDwgMmUtMTYgKioqXG5vcHBfc3VwcF9yYXRpbyAgICAwLjA5NjMyMCAgIDAuMDM3MjU2ICAgMi41ODUgIDAuMDA5NzMgKiogXG5zdXBwb3J0ZXJfcG9saXR5IC0wLjAwMTE4MyAgIDAuMDAxMjc4ICAtMC45MjUgIDAuMzU0NzkgICAgXG4tLS1cblNpZ25pZi4gY29kZXM6ICAwIOKAmCoqKuKAmSAwLjAwMSDigJgqKuKAmSAwLjAxIOKAmCrigJkgMC4wNSDigJgu4oCZIDAuMSDigJgg4oCZIDFcblxuKERpc3BlcnNpb24gcGFyYW1ldGVyIGZvciBOZWdhdGl2ZSBCaW5vbWlhbCg3MzU5LjA3NSkgZmFtaWx5IHRha2VuIHRvIGJlIDEpXG5cbiAgICBOdWxsIGRldmlhbmNlOiA0MjkxLjggIG9uIDYwODcgIGRlZ3JlZXMgb2YgZnJlZWRvbVxuUmVzaWR1YWwgZGV2aWFuY2U6IDQyODMuNiAgb24gNjA4NSAgZGVncmVlcyBvZiBmcmVlZG9tXG4gICg0NTYgb2JzZXJ2YXRpb25zIGRlbGV0ZWQgZHVlIHRvIG1pc3NpbmduZXNzKVxuQUlDOiA3NTM5LjhcblxuTnVtYmVyIG9mIEZpc2hlciBTY29yaW5nIGl0ZXJhdGlvbnM6IDFcblxuXG4gICAgICAgICAgICAgIFRoZXRhOiAgNzM1OSBcbiAgICAgICAgICBTdGQuIEVyci46ICAxNjQ3NSBcbldhcm5pbmcgd2hpbGUgZml0dGluZyB0aGV0YTogaXRlcmF0aW9uIGxpbWl0IHJlYWNoZWQgXG5cbiAyIHggbG9nLWxpa2VsaWhvb2Q6ICAtNzUzMS43OTkgXG4ifQ== -->
-<pre><code>
-Call:
-glm.nb(formula = targ_democratic ~ opp_supp_ratio + supporter_polity, 
-    data = autocracies_data, init.theta = 7359.074697, link = log)
-
-Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--0.8930  -0.7327  -0.7120   1.0080   1.1505  
-
-Coefficients:
-                  Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)      -1.439950   0.048521 -29.677  &lt; 2e-16 ***
-opp_supp_ratio    0.096320   0.037256   2.585  0.00973 ** 
-supporter_polity -0.001183   0.001278  -0.925  0.35479    
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-(Dispersion parameter for Negative Binomial(7359.075) family taken to be 1)
-
-    Null deviance: 4291.8  on 6087  degrees of freedom
-Residual deviance: 4283.6  on 6085  degrees of freedom
-  (456 observations deleted due to missingness)
-AIC: 7539.8
-
-Number of Fisher Scoring iterations: 1
-
-              Theta:  7359 
-          Std. Err.:  16475 
-Warning while fitting theta: iteration limit reached 
-
- 2 x log-likelihood:  -7531.799 </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubW9kZWw0IDwtIGdsbS5uYih0YXJnX2RlbW9jcmF0aWMgfiBvcHBfc3VwcF9yYXRpbyArIHN1cHBfV19yYXRpbyArIHN1cHBvcnRlcl9wb2xpdHksIGRhdGEgPSBhdXRvY3JhY2llc19kYXRhKVxuYGBgIn0= -->
-<pre class="r"><code>model4 &lt;- glm.nb(targ_democratic ~ opp_supp_ratio + supp_W_ratio + supporter_polity, data = autocracies_data)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiV2FybmluZzogaXRlcmF0aW9uIGxpbWl0IHJlYWNoZWRXYXJuaW5nOiBpdGVyYXRpb24gbGltaXQgcmVhY2hlZFxuIn0= -->
-<pre><code>Warning: iteration limit reachedWarning: iteration limit reached</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3VtbWFyeShtb2RlbDQpXG5gYGAifQ== -->
-<pre class="r"><code>summary(model4)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxuZ2xtLm5iKGZvcm11bGEgPSB0YXJnX2RlbW9jcmF0aWMgfiBvcHBfc3VwcF9yYXRpbyArIHN1cHBfV19yYXRpbyArIFxuICAgIHN1cHBvcnRlcl9wb2xpdHksIGRhdGEgPSBhdXRvY3JhY2llc19kYXRhLCBpbml0LnRoZXRhID0gNzU1Ny40NjI4MzYsIFxuICAgIGxpbmsgPSBsb2cpXG5cbkRldmlhbmNlIFJlc2lkdWFsczogXG4gICAgTWluICAgICAgIDFRICAgTWVkaWFuICAgICAgIDNRICAgICAgTWF4ICBcbi0xLjExOTcgIC0wLjc0MDIgIC0wLjcyMTkgICAxLjAxNTUgICAxLjE0OTkgIFxuXG5Db2VmZmljaWVudHM6XG4gICAgICAgICAgICAgICAgICBFc3RpbWF0ZSBTdGQuIEVycm9yIHogdmFsdWUgUHIoPnx6fCkgICAgXG4oSW50ZXJjZXB0KSAgICAgIC0xLjQ4MzM0NyAgIDAuMDYxOTczIC0yMy45MzUgICA8MmUtMTYgKioqXG5vcHBfc3VwcF9yYXRpbyAgICAwLjA4MDg3NSAgIDAuMDM5MjY2ICAgMi4wNjAgICAwLjAzOTQgKiAgXG5zdXBwX1dfcmF0aW8gICAgICAwLjAyNzk5OCAgIDAuMDA5NjE4ICAgMi45MTEgICAwLjAwMzYgKiogXG5zdXBwb3J0ZXJfcG9saXR5IC0wLjAwMTQ4NyAgIDAuMDAxMjg1ICAtMS4xNTcgICAwLjI0NzMgICAgXG4tLS1cblNpZ25pZi4gY29kZXM6ICAwIOKAmCoqKuKAmSAwLjAwMSDigJgqKuKAmSAwLjAxIOKAmCrigJkgMC4wNSDigJgu4oCZIDAuMSDigJgg4oCZIDFcblxuKERpc3BlcnNpb24gcGFyYW1ldGVyIGZvciBOZWdhdGl2ZSBCaW5vbWlhbCg3NTU3LjQ2MykgZmFtaWx5IHRha2VuIHRvIGJlIDEpXG5cbiAgICBOdWxsIGRldmlhbmNlOiA0MDMxLjcgIG9uIDU2OTEgIGRlZ3JlZXMgb2YgZnJlZWRvbVxuUmVzaWR1YWwgZGV2aWFuY2U6IDQwMjAuNSAgb24gNTY4OCAgZGVncmVlcyBvZiBmcmVlZG9tXG4gICg4NTIgb2JzZXJ2YXRpb25zIGRlbGV0ZWQgZHVlIHRvIG1pc3NpbmduZXNzKVxuQUlDOiA3MTI4LjdcblxuTnVtYmVyIG9mIEZpc2hlciBTY29yaW5nIGl0ZXJhdGlvbnM6IDFcblxuXG4gICAgICAgICAgICAgIFRoZXRhOiAgNzU1NyBcbiAgICAgICAgICBTdGQuIEVyci46ICAxNzM3NyBcbldhcm5pbmcgd2hpbGUgZml0dGluZyB0aGV0YTogaXRlcmF0aW9uIGxpbWl0IHJlYWNoZWQgXG5cbiAyIHggbG9nLWxpa2VsaWhvb2Q6ICAtNzExOC42ODYgXG4ifQ== -->
-<pre><code>
-Call:
-glm.nb(formula = targ_democratic ~ opp_supp_ratio + supp_W_ratio + 
-    supporter_polity, data = autocracies_data, init.theta = 7557.462836, 
+glm.nb(formula = Num_S_TrainCamp ~ targ_democratic + oppsize_norm + 
+    WarOnTerror + ColdWar, data = autocracies_data, init.theta = 2.751544764, 
     link = log)
 
 Deviance Residuals: 
     Min       1Q   Median       3Q      Max  
--1.1197  -0.7402  -0.7219   1.0155   1.1499  
+-0.8231  -0.5874  -0.4955  -0.4065   2.9408  
 
 Coefficients:
-                  Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)      -1.483347   0.061973 -23.935   &lt;2e-16 ***
-opp_supp_ratio    0.080875   0.039266   2.060   0.0394 *  
-supp_W_ratio      0.027998   0.009618   2.911   0.0036 ** 
-supporter_polity -0.001487   0.001285  -1.157   0.2473    
+                Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)     -2.91542    0.16359 -17.822  &lt; 2e-16 ***
+targ_democratic -0.14128    0.09090  -1.554 0.120138    
+oppsize_norm     1.82308    0.22300   8.175 2.95e-16 ***
+WarOnTerror     -0.63395    0.16841  -3.764 0.000167 ***
+ColdWar          0.13989    0.09521   1.469 0.141768    
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
-(Dispersion parameter for Negative Binomial(7557.463) family taken to be 1)
+(Dispersion parameter for Negative Binomial(2.7515) family taken to be 1)
 
-    Null deviance: 4031.7  on 5691  degrees of freedom
-Residual deviance: 4020.5  on 5688  degrees of freedom
-  (852 observations deleted due to missingness)
-AIC: 7128.7
+    Null deviance: 2508.9  on 4426  degrees of freedom
+Residual deviance: 2406.8  on 4422  degrees of freedom
+  (375 observations deleted due to missingness)
+AIC: 3875.4
 
 Number of Fisher Scoring iterations: 1
 
-              Theta:  7557 
-          Std. Err.:  17377 
-Warning while fitting theta: iteration limit reached 
+              Theta:  2.75 
+          Std. Err.:  1.25 
 
- 2 x log-likelihood:  -7118.686 </code></pre>
+ 2 x log-likelihood:  -3863.424 </code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQoNCg0KDQpgYGB7cn0NCg0KI0xvYWRpbmcgTkFHUyBkeWFkaWMgKHN1cHBvcnRlci10YXJnZXQpIGRhdGENCg0KbGlicmFyeShoZXJlKQ0KbGlicmFyeShyZWFkcikNCm5hZ3NfZGF0YTEgPC0gcmVhZF9kZWxpbShoZXJlKCJkYXRhIiwiRHlhZGljX1RhcmdldC1TdXBwb3J0ZXJfYWN0aXZlX3N1cHBvcnQuY3N2IiksIGRlbGltID0gIjsiLCBlc2NhcGVfZG91YmxlID0gRkFMU0UsIHRyaW1fd3MgPSBUUlVFKQ0KVmlldyhuYWdzX2RhdGExKQ0KDQpuYWdzX2RhdGExIDwtIG5hZ3NfZGF0YTFbd2hpY2gobmFnc19kYXRhMSRZZWFyID4gMTk0NSksXQ0KDQpuYWdzX2RhdGExJHllYXIgPC0gbmFnc19kYXRhMSRZZWFyDQpuYWdzX2RhdGExJENPV2NvZGUgPC0gbmFnc19kYXRhMSRTdXBOdW1fQ09XDQoNCmBgYA0KDQpgYGB7cn0NCg0KIyBjcmVhdGluZyBwb2xpdHkgc2NvcmVzIGZvciBzdXBwb3J0ZXIgYW5kIHRhcmdldCBjb3VudHJpZXMNCg0KI2xvYWQgcG9saXR5IGRhdGEgc2V0IGZvciBzdXBwb3RlcnMNCiMNCmxpYnJhcnkocmVhZHhsKQ0Kc3VwcG9ydF9wb2xpdHkgPC0gcmVhZF9leGNlbCgiZGF0YS9wNXYyMDE4LnhscyIpDQpWaWV3KHN1cHBvcnRfcG9saXR5KQ0KDQojY3JlYXRlIHNjb3JlIGxhYmVscyBmb3Igc3VwcG9ydGVycw0Kc3VwcG9ydF9wb2xpdHkkc3VwcG9ydGVyX3A1IDwtIHN1cHBvcnRfcG9saXR5JHA1DQpzdXBwb3J0X3BvbGl0eSRzdXBwb3J0ZXJfY3llYXIgPC0gc3VwcG9ydF9wb2xpdHkkY3llYXINCnN1cHBvcnRfcG9saXR5JHN1cHBvcnRlcl9mbGFnIDwtIHN1cHBvcnRfcG9saXR5JGZsYWcNCnN1cHBvcnRfcG9saXR5JFN1cE51bV9DT1cgPC0gc3VwcG9ydF9wb2xpdHkkY2NvZGUgDQpzdXBwb3J0X3BvbGl0eSRzdXBwb3J0ZXJfZGVtb2MgPC0gc3VwcG9ydF9wb2xpdHkkZGVtb2MgDQpzdXBwb3J0X3BvbGl0eSRzdXBwb3J0ZXJfYXV0b2MgPC0gc3VwcG9ydF9wb2xpdHkkYXV0b2MNCnN1cHBvcnRfcG9saXR5JHN1cHBvcnRlcl9wb2xpdHkgPC0gc3VwcG9ydF9wb2xpdHkkcG9saXR5DQpzdXBwb3J0X3BvbGl0eSRzdXBwb3J0ZXJfcG9saXR5MiA8LSBzdXBwb3J0X3BvbGl0eSRwb2xpdHkyDQpzdXBwb3J0X3BvbGl0eSRzdXBwb3J0ZXJfZHVyYWJsZSA8LSBzdXBwb3J0X3BvbGl0eSRkdXJhYmxlDQoNCiNzZWxlY3Qgb25seSB0aGUgc3VwcG9ydGVyIG5hbWVkIHZhcmlhYmxlcw0KDQpzdXBwb3J0X3BvbGl0eSA8LSBzdXBwb3J0X3BvbGl0eVtjKDYsMzg6NDYpXQ0KDQojcmVwZWF0IHRoZSBhYm92ZSBmb3IgdGFyZ2V0IGNvdW50cmllcw0KDQojbG9hZCBwb2xpdHkgZGF0YSBzZXQgZm9yIHRhcmdldHMNCiMNCnRhcmdldF9wb2xpdHkgPC0gcmVhZF9leGNlbCgiZGF0YS9wNXYyMDE4LnhscyIpDQpWaWV3KHRhcmdldF9wb2xpdHkpDQoNCiNjcmVhdGUgc2NvcmUgbGFiZWxzIGZvciB0YXJnZXRzDQp0YXJnZXRfcG9saXR5JHRhcmdldF9wNSA8LSB0YXJnZXRfcG9saXR5JHA1DQp0YXJnZXRfcG9saXR5JHRhcmdldF9jeWVhciA8LSB0YXJnZXRfcG9saXR5JGN5ZWFyDQp0YXJnZXRfcG9saXR5JHRhcmdldF9mbGFnIDwtIHRhcmdldF9wb2xpdHkkZmxhZw0KdGFyZ2V0X3BvbGl0eSRUYXJOdW1fQ09XIDwtIHRhcmdldF9wb2xpdHkkY2NvZGUgDQp0YXJnZXRfcG9saXR5JHRhcmdldF9kZW1vYyA8LSB0YXJnZXRfcG9saXR5JGRlbW9jIA0KdGFyZ2V0X3BvbGl0eSR0YXJnZXRfYXV0b2MgPC0gdGFyZ2V0X3BvbGl0eSRhdXRvYw0KdGFyZ2V0X3BvbGl0eSR0YXJnZXRfcG9saXR5IDwtIHRhcmdldF9wb2xpdHkkcG9saXR5DQp0YXJnZXRfcG9saXR5JHRhcmdldF9wb2xpdHkyIDwtIHRhcmdldF9wb2xpdHkkcG9saXR5Mg0KdGFyZ2V0X3BvbGl0eSR0YXJnZXRfZHVyYWJsZSA8LSB0YXJnZXRfcG9saXR5JGR1cmFibGUNCg0KI3NlbGVjdCBvbmx5IHRoZSB0YXJnZXQgbmFtZWQgdmFyaWFibGVzDQoNCnRhcmdldF9wb2xpdHkgPC0gdGFyZ2V0X3BvbGl0eVtjKDYsMzg6NDYpXQ0KDQoNCmBgYA0KDQpgYGB7cn0NCiMgTWVyZ2UgcG9saXR5IGRhdGEgZm9yIHN1cHBvcnRlcnMNCmxpYnJhcnkoZHBseXIpDQpuYWdzX2RhdGEyIDwtIGxlZnRfam9pbihuYWdzX2RhdGExLHN1cHBvcnRfcG9saXR5LCBieSA9IGMoIlN1cE51bV9DT1ciLCJ5ZWFyIikpDQoNCiMgTWVyZ2UgcG9saXR5IGRhdGEgZm9yIHRhcmdldHMNCg0KbmFnc19kYXRhMyA8LSBsZWZ0X2pvaW4obmFnc19kYXRhMix0YXJnZXRfcG9saXR5LCBieSA9IGMoIlRhck51bV9DT1ciLCJ5ZWFyIikpDQoNCg0KYGBgDQoNCg0KDQpgYGB7cn0NCg0KY291bnRyaWVzX2RhdGEgPC0gcmVhZF9jc3YoaGVyZSgiZGF0YSIsInZkZW1fcGx1c193LmNzdiIpKQ0KVmlldyhjb3VudHJpZXNfZGF0YSkNCg0KY291bnRyaWVzX2RhdGEgPC0gY291bnRyaWVzX2RhdGFbd2hpY2goY291bnRyaWVzX2RhdGEkeWVhciA8IDIwMTEpLF0NCg0KbGlicmFyeShkcGx5cikNCg0KZnVsbF9kYXRhIDwtIGxlZnRfam9pbihuYWdzX2RhdGEzLGNvdW50cmllc19kYXRhLCBieSA9IGMoIkNPV2NvZGUiLCJ5ZWFyIikpDQoNCiMgdmRlbV9zZWxlY3QxIDwtIHZkZW1fd19zZWxlY3Rbd2hpY2godmRlbV93X3NlbGVjdCR5ZWFyID4gMTk0NSksXQ0KDQoNCg0KDQpgYGANCg0KDQpgYGB7cn0NCnN1bW1hcnkoZnVsbF9kYXRhJFdfbm9ybSkNCg0KIyBjcmVhdGUgYSBkZW1vY3JhY3kgdGFyZ2V0IHZhcmlhYmxlDQojIA0KDQoNCmZ1bGxfZGF0YSR0YXJnX2RlbW9jcmF0aWMgPC0gaWZlbHNlKGZ1bGxfZGF0YSR0YXJnZXRfcG9saXR5ID4gNiwxLDApDQpzdW1tYXJ5KGZ1bGxfZGF0YSR0YXJnX2RlbW9jcmF0aWMpDQoNCiNjcmVhdGUgYSBiaW5hcnkgZGVtb2NyYWN5IHZhcmlhYmxlIGZvciBzdXBwb3J0ZXJzIA0KDQpmdWxsX2RhdGEkc3VwcF9kZW1vY3JhdGljIDwtIGlmZWxzZShmdWxsX2RhdGEkc3VwcG9ydGVyX3BvbGl0eSA+IDYsMSwwKQ0Kc3VtbWFyeShmdWxsX2RhdGEkc3VwcF9kZW1vY3JhdGljKQ0KDQoNCg0KDQojIG5vcm1hbGl6ZSBvcHBvc2l0aW9uIGFuZCBzdXBwb3J0IGdyb3VwIHNpemUgdmFyaWFibGVzDQojIA0KDQoNCm1pbm9wcCA8LSBtaW4oZnVsbF9kYXRhJHYycmVnb3BwZ3JvdXBzc2l6ZSwgbmEucm0gPSBUUlVFKQ0KbWF4b3BwIDwtIG1heChmdWxsX2RhdGEkdjJyZWdvcHBncm91cHNzaXplLCBuYS5ybSA9IFRSVUUpDQoNCg0KZnVsbF9kYXRhJG9wcHNpemVfbm9ybSA8LSAoZnVsbF9kYXRhJHYycmVnb3BwZ3JvdXBzc2l6ZSAtIG1pbm9wcCApIC8gKG1heG9wcCAtIG1pbm9wcCkNCg0KDQptaW5zdXBwIDwtIG1pbihmdWxsX2RhdGEkdjJyZWdzdXBncm91cHNzaXplLCBuYS5ybSA9IFRSVUUpDQptYXhzdXBwIDwtIG1heChmdWxsX2RhdGEkdjJyZWdzdXBncm91cHNzaXplLCBuYS5ybSA9IFRSVUUpDQoNCmZ1bGxfZGF0YSRzdXBwc2l6ZV9ub3JtIDwtIChmdWxsX2RhdGEkdjJyZWdzdXBncm91cHNzaXplIC0gbWluc3VwcCkgLyAobWF4c3VwcCAtIG1pbnN1cHApDQoNCg0Kc3VtbWFyeShmdWxsX2RhdGEkc3VwcHNpemVfbm9ybSkNCnN1bW1hcnkoZnVsbF9kYXRhJG9wcHNpemVfbm9ybSkNCg0KDQoNCiMgY3JlYXRlIGEgdmFyaWFibGUgb2YgcmF0aW8gb2Ygb3Bwb3NpdGlvbiB0byBzdXBwb3J0IGdyb3VwIHNpemUNCg0KZnVsbF9kYXRhJG9wcF9zdXBwX3JhdGlvIDwtIGZ1bGxfZGF0YSRvcHBzaXplX25vcm0gLyBmdWxsX2RhdGEkc3VwcHNpemVfbm9ybQ0Kc3VtbWFyeShmdWxsX2RhdGEkb3BwX3N1cHBfcmF0aW8pDQoNCiMgY3JlYXRlIHZhcmlhYmxlIG9mIHJhdGlvIG9mIHN1cHBvcnQgc2l6ZSBzY29yZSB0byBXIHNjb3JlDQojIA0KDQpmdWxsX2RhdGEkc3VwcF9XX3JhdGlvIDwtIGZ1bGxfZGF0YSRzdXBwc2l6ZV9ub3JtIC8gZnVsbF9kYXRhJFdfbm9ybQ0Kc3VtbWFyeShmdWxsX2RhdGEkc3VwcF9XX3JhdGlvKQ0KDQojIGNyZWF0ZSB2YXJpYWJsZSBvZiByYXRpbyBvZiBvcHBvc2l0aW9uIHRvIFcNCg0KZnVsbF9kYXRhJG9wcF9XX3JhdGlvIDwtIGZ1bGxfZGF0YSRvcHBzaXplX25vcm0gLyBmdWxsX2RhdGEkV19ub3JtDQpzdW1tYXJ5KGZ1bGxfZGF0YSRvcHBfV19yYXRpbykNCg0KDQojIGNyZWF0ZSBkYXRhZnJhbWUgd2l0aCBqdXN0IG5vbi1kZW1vY3JhY3RpYyBzdXBwb3J0ZXIgc3RhdGVzDQojIA0KDQpmdWxsX2RhdGEkc3VwcF9hdXRvY3JhdGljIDwtIGlmZWxzZShmdWxsX2RhdGEkc3VwcG9ydGVyX3BvbGl0eSA8IDUsMSwwKQ0Kc3VtbWFyeShmdWxsX2RhdGEkc3VwcF9hdXRvY3JhdGljKQ0KDQphdXRvY3JhY2llc19kYXRhIDwtIGZ1bGxfZGF0YVt3aGljaChmdWxsX2RhdGEkc3VwcF9hdXRvY3JhdGljID09IDEpLF0NCg0KDQpgYGANCmBgYHtyfQ0KDQpsaWJyYXJ5KE1BU1MpDQoNCiMgbW9kZWxzIHdpdGgganVzdCBvcHBvc2l0aW9uIGFuZCBzdXBwb3J0IGdyb3VwIHNpemVzDQojIA0KDQptb2RlbF9vcHBvc2l0aW9uIDwtIGdsbS5uYih0YXJnX2RlbW9jcmF0aWMgfiBvcHBzaXplX25vcm0gKyBzdXBwb3J0ZXJfcG9saXR5LCBkYXRhID0gYXV0b2NyYWNpZXNfZGF0YSkNCnN1bW1hcnkobW9kZWxfb3Bwb3NpdGlvbikNCiAgICAgICAgDQptb2RlbF9zdXBwb3J0IDwtIGdsbS5uYih0YXJnX2RlbW9jcmF0aWMgfiBzdXBwc2l6ZV9ub3JtICsgc3VwcG9ydGVyX3BvbGl0eSwgZGF0YSA9IGF1dG9jcmFjaWVzX2RhdGEpDQpzdW1tYXJ5KG1vZGVsX3N1cHBvcnQpDQogICAgICAgIA0KDQoNCiMjIE1vZGVsIFcgLSBqdXN0IHRoZSBlZmZlY3Qgb2YgVw0KIyMgDQoNCm1vZGVsdyA8LSBnbG0ubmIodGFyZ19kZW1vY3JhdGljIH4gV19ub3JtLCBkYXRhID0gYXV0b2NyYWNpZXNfZGF0YSkNCnN1bW1hcnkobW9kZWx3KQ0KDQojcmF0aW8gb2YgYWN0dWFsIHN1cHBvcnQgdG8gVyAtIGhvdyBjbG9zZSBhcmUgdGhleSB0byBhIHRydWx5IG1pbmltYWwgd2lubmluZyBjb2FsaXRpb24NCiMNCm1vZGVsMSA8LSBnbG0ubmIodGFyZ19kZW1vY3JhdGljIH4gc3VwcF9XX3JhdGlvICsgc3VwcG9ydGVyX3BvbGl0eSwgZGF0YSA9IGF1dG9jcmFjaWVzX2RhdGEpDQpzdW1tYXJ5KG1vZGVsMSkNCg0KDQojIHJhdGlvIG9mIG9wcG9uZW50IHNpemUgdG8gVyAtIGhvdyBjbG9zZSBhcmUgdGhlIG9wcG9zaXRpb24gdG8gaGF2aW5nIGEgbWluaW1hbCB3aW5uaW5nIGNvYWxpdGlvbiBvZiB0aGVpciBvd24NCg0KbW9kZWwyIDwtIGdsbS5uYih0YXJnX2RlbW9jcmF0aWMgfiBvcHBfV19yYXRpbyArIHN1cHBvcnRlcl9wb2xpdHksIGRhdGEgPSBhdXRvY3JhY2llc19kYXRhKQ0Kc3VtbWFyeShtb2RlbDIpDQoNCiMgcmF0aW8gb2Ygb3Bwb3NpdGlvbiB0byBzdXBwb3J0ZXJzIC0gaGVhZCB0byBoZWFkIG1hdGNoIHVwDQoNCm1vZGVsMyA8LSBnbG0ubmIodGFyZ19kZW1vY3JhdGljIH4gb3BwX3N1cHBfcmF0aW8gKyBzdXBwb3J0ZXJfcG9saXR5LCBkYXRhID0gYXV0b2NyYWNpZXNfZGF0YSkNCnN1bW1hcnkobW9kZWwzKQ0KDQptb2RlbDQgPC0gZ2xtLm5iKHRhcmdfZGVtb2NyYXRpYyB+IG9wcF9zdXBwX3JhdGlvICsgc3VwcF9XX3JhdGlvICsgc3VwcG9ydGVyX3BvbGl0eSwgZGF0YSA9IGF1dG9jcmFjaWVzX2RhdGEpDQpzdW1tYXJ5KG1vZGVsNCkNCg0KDQpgYGANCg0K</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlIgTm90ZWJvb2siDQpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sNCi0tLQ0KDQoNCg0KDQpgYGB7cn0NCg0KI0xvYWRpbmcgTkFHUyBkeWFkaWMgKHN1cHBvcnRlci10YXJnZXQpIGRhdGENCg0KbGlicmFyeShoZXJlKQ0KbGlicmFyeShyZWFkcikNCm5hZ3NfZGF0YTEgPC0gcmVhZF9kZWxpbShoZXJlKCJkYXRhIiwiRHlhZGljX1RhcmdldC1TdXBwb3J0ZXJfYWN0aXZlX3N1cHBvcnQuY3N2IiksIGRlbGltID0gIjsiLCBlc2NhcGVfZG91YmxlID0gRkFMU0UsIHRyaW1fd3MgPSBUUlVFKQ0KVmlldyhuYWdzX2RhdGExKQ0KDQpuYWdzX2RhdGExIDwtIG5hZ3NfZGF0YTFbd2hpY2gobmFnc19kYXRhMSRZZWFyID4gMTk0NSksXQ0KDQpuYWdzX2RhdGExJHllYXIgPC0gbmFnc19kYXRhMSRZZWFyDQpuYWdzX2RhdGExJENPV2NvZGUgPC0gbmFnc19kYXRhMSRTdXBOdW1fQ09XDQoNCmBgYA0KDQpgYGB7cn0NCg0KIyBjcmVhdGluZyBwb2xpdHkgc2NvcmVzIGZvciBzdXBwb3J0ZXIgYW5kIHRhcmdldCBjb3VudHJpZXMNCg0KI2xvYWQgcG9saXR5IGRhdGEgc2V0IGZvciBzdXBwb3RlcnMNCiMNCmxpYnJhcnkocmVhZHhsKQ0Kc3VwcG9ydF9wb2xpdHkgPC0gcmVhZF9leGNlbCgiZGF0YS9wNXYyMDE4LnhscyIpDQpWaWV3KHN1cHBvcnRfcG9saXR5KQ0KDQojY3JlYXRlIHNjb3JlIGxhYmVscyBmb3Igc3VwcG9ydGVycw0Kc3VwcG9ydF9wb2xpdHkkc3VwcG9ydGVyX3A1IDwtIHN1cHBvcnRfcG9saXR5JHA1DQpzdXBwb3J0X3BvbGl0eSRzdXBwb3J0ZXJfY3llYXIgPC0gc3VwcG9ydF9wb2xpdHkkY3llYXINCnN1cHBvcnRfcG9saXR5JHN1cHBvcnRlcl9mbGFnIDwtIHN1cHBvcnRfcG9saXR5JGZsYWcNCnN1cHBvcnRfcG9saXR5JFN1cE51bV9DT1cgPC0gc3VwcG9ydF9wb2xpdHkkY2NvZGUgDQpzdXBwb3J0X3BvbGl0eSRzdXBwb3J0ZXJfZGVtb2MgPC0gc3VwcG9ydF9wb2xpdHkkZGVtb2MgDQpzdXBwb3J0X3BvbGl0eSRzdXBwb3J0ZXJfYXV0b2MgPC0gc3VwcG9ydF9wb2xpdHkkYXV0b2MNCnN1cHBvcnRfcG9saXR5JHN1cHBvcnRlcl9wb2xpdHkgPC0gc3VwcG9ydF9wb2xpdHkkcG9saXR5DQpzdXBwb3J0X3BvbGl0eSRzdXBwb3J0ZXJfcG9saXR5MiA8LSBzdXBwb3J0X3BvbGl0eSRwb2xpdHkyDQpzdXBwb3J0X3BvbGl0eSRzdXBwb3J0ZXJfZHVyYWJsZSA8LSBzdXBwb3J0X3BvbGl0eSRkdXJhYmxlDQoNCiNzZWxlY3Qgb25seSB0aGUgc3VwcG9ydGVyIG5hbWVkIHZhcmlhYmxlcw0KDQpzdXBwb3J0X3BvbGl0eSA8LSBzdXBwb3J0X3BvbGl0eVtjKDYsMzg6NDYpXQ0KDQojcmVwZWF0IHRoZSBhYm92ZSBmb3IgdGFyZ2V0IGNvdW50cmllcw0KDQojbG9hZCBwb2xpdHkgZGF0YSBzZXQgZm9yIHRhcmdldHMNCiMNCnRhcmdldF9wb2xpdHkgPC0gcmVhZF9leGNlbCgiZGF0YS9wNXYyMDE4LnhscyIpDQpWaWV3KHRhcmdldF9wb2xpdHkpDQoNCiNjcmVhdGUgc2NvcmUgbGFiZWxzIGZvciB0YXJnZXRzDQp0YXJnZXRfcG9saXR5JHRhcmdldF9wNSA8LSB0YXJnZXRfcG9saXR5JHA1DQp0YXJnZXRfcG9saXR5JHRhcmdldF9jeWVhciA8LSB0YXJnZXRfcG9saXR5JGN5ZWFyDQp0YXJnZXRfcG9saXR5JHRhcmdldF9mbGFnIDwtIHRhcmdldF9wb2xpdHkkZmxhZw0KdGFyZ2V0X3BvbGl0eSRUYXJOdW1fQ09XIDwtIHRhcmdldF9wb2xpdHkkY2NvZGUgDQp0YXJnZXRfcG9saXR5JHRhcmdldF9kZW1vYyA8LSB0YXJnZXRfcG9saXR5JGRlbW9jIA0KdGFyZ2V0X3BvbGl0eSR0YXJnZXRfYXV0b2MgPC0gdGFyZ2V0X3BvbGl0eSRhdXRvYw0KdGFyZ2V0X3BvbGl0eSR0YXJnZXRfcG9saXR5IDwtIHRhcmdldF9wb2xpdHkkcG9saXR5DQp0YXJnZXRfcG9saXR5JHRhcmdldF9wb2xpdHkyIDwtIHRhcmdldF9wb2xpdHkkcG9saXR5Mg0KdGFyZ2V0X3BvbGl0eSR0YXJnZXRfZHVyYWJsZSA8LSB0YXJnZXRfcG9saXR5JGR1cmFibGUNCg0KI3NlbGVjdCBvbmx5IHRoZSB0YXJnZXQgbmFtZWQgdmFyaWFibGVzDQoNCnRhcmdldF9wb2xpdHkgPC0gdGFyZ2V0X3BvbGl0eVtjKDYsMzg6NDYpXQ0KDQoNCmBgYA0KDQpgYGB7cn0NCiMgTWVyZ2UgcG9saXR5IGRhdGEgZm9yIHN1cHBvcnRlcnMNCmxpYnJhcnkoZHBseXIpDQpuYWdzX2RhdGEyIDwtIGxlZnRfam9pbihuYWdzX2RhdGExLHN1cHBvcnRfcG9saXR5LCBieSA9IGMoIlN1cE51bV9DT1ciLCJ5ZWFyIikpDQoNCiMgTWVyZ2UgcG9saXR5IGRhdGEgZm9yIHRhcmdldHMNCg0KbmFnc19kYXRhMyA8LSBsZWZ0X2pvaW4obmFnc19kYXRhMix0YXJnZXRfcG9saXR5LCBieSA9IGMoIlRhck51bV9DT1ciLCJ5ZWFyIikpDQoNCg0KYGBgDQoNCg0KDQpgYGB7cn0NCg0KY291bnRyaWVzX2RhdGEgPC0gcmVhZF9jc3YoaGVyZSgiZGF0YSIsInZkZW1fcGx1c193LmNzdiIpKQ0KVmlldyhjb3VudHJpZXNfZGF0YSkNCg0KY291bnRyaWVzX2RhdGEgPC0gY291bnRyaWVzX2RhdGFbd2hpY2goY291bnRyaWVzX2RhdGEkeWVhciA8IDIwMTEpLF0NCg0KbGlicmFyeShkcGx5cikNCg0KZnVsbF9kYXRhIDwtIGxlZnRfam9pbihuYWdzX2RhdGEzLGNvdW50cmllc19kYXRhLCBieSA9IGMoIkNPV2NvZGUiLCJ5ZWFyIikpDQoNCiMgdmRlbV9zZWxlY3QxIDwtIHZkZW1fd19zZWxlY3Rbd2hpY2godmRlbV93X3NlbGVjdCR5ZWFyID4gMTk0NSksXQ0KDQoNCg0KDQpgYGANCg0KDQpgYGB7cn0NCnN1bW1hcnkoZnVsbF9kYXRhJFdfbm9ybSkNCg0KIyBjcmVhdGUgYSBkZW1vY3JhY3kgdGFyZ2V0IHZhcmlhYmxlDQojIA0KDQoNCmZ1bGxfZGF0YSR0YXJnX2RlbW9jcmF0aWMgPC0gaWZlbHNlKGZ1bGxfZGF0YSR0YXJnZXRfcG9saXR5ID4gNiwxLDApDQpzdW1tYXJ5KGZ1bGxfZGF0YSR0YXJnX2RlbW9jcmF0aWMpDQoNCiNjcmVhdGUgYSBiaW5hcnkgZGVtb2NyYWN5IHZhcmlhYmxlIGZvciBzdXBwb3J0ZXJzIA0KDQpmdWxsX2RhdGEkc3VwcF9kZW1vY3JhdGljIDwtIGlmZWxzZShmdWxsX2RhdGEkc3VwcG9ydGVyX3BvbGl0eSA+IDYsMSwwKQ0Kc3VtbWFyeShmdWxsX2RhdGEkc3VwcF9kZW1vY3JhdGljKQ0KDQoNCg0KDQojIG5vcm1hbGl6ZSBvcHBvc2l0aW9uIGFuZCBzdXBwb3J0IGdyb3VwIHNpemUgdmFyaWFibGVzDQojIA0KDQoNCm1pbm9wcCA8LSBtaW4oZnVsbF9kYXRhJHYycmVnb3BwZ3JvdXBzc2l6ZSwgbmEucm0gPSBUUlVFKQ0KbWF4b3BwIDwtIG1heChmdWxsX2RhdGEkdjJyZWdvcHBncm91cHNzaXplLCBuYS5ybSA9IFRSVUUpDQoNCg0KZnVsbF9kYXRhJG9wcHNpemVfbm9ybSA8LSAoZnVsbF9kYXRhJHYycmVnb3BwZ3JvdXBzc2l6ZSAtIG1pbm9wcCApIC8gKG1heG9wcCAtIG1pbm9wcCkNCg0KDQptaW5zdXBwIDwtIG1pbihmdWxsX2RhdGEkdjJyZWdzdXBncm91cHNzaXplLCBuYS5ybSA9IFRSVUUpDQptYXhzdXBwIDwtIG1heChmdWxsX2RhdGEkdjJyZWdzdXBncm91cHNzaXplLCBuYS5ybSA9IFRSVUUpDQoNCmZ1bGxfZGF0YSRzdXBwc2l6ZV9ub3JtIDwtIChmdWxsX2RhdGEkdjJyZWdzdXBncm91cHNzaXplIC0gbWluc3VwcCkgLyAobWF4c3VwcCAtIG1pbnN1cHApDQoNCg0Kc3VtbWFyeShmdWxsX2RhdGEkc3VwcHNpemVfbm9ybSkNCnN1bW1hcnkoZnVsbF9kYXRhJG9wcHNpemVfbm9ybSkNCg0KDQoNCiMgY3JlYXRlIGEgdmFyaWFibGUgb2YgcmF0aW8gb2Ygb3Bwb3NpdGlvbiB0byBzdXBwb3J0IGdyb3VwIHNpemUNCg0KZnVsbF9kYXRhJG9wcF9zdXBwX3JhdGlvIDwtIGZ1bGxfZGF0YSRvcHBzaXplX25vcm0gLyBmdWxsX2RhdGEkc3VwcHNpemVfbm9ybQ0Kc3VtbWFyeShmdWxsX2RhdGEkb3BwX3N1cHBfcmF0aW8pDQoNCiMgY3JlYXRlIHZhcmlhYmxlIG9mIHJhdGlvIG9mIHN1cHBvcnQgc2l6ZSBzY29yZSB0byBXIHNjb3JlDQojIA0KDQpmdWxsX2RhdGEkc3VwcF9XX3JhdGlvIDwtIGZ1bGxfZGF0YSRzdXBwc2l6ZV9ub3JtIC8gZnVsbF9kYXRhJFdfbm9ybQ0Kc3VtbWFyeShmdWxsX2RhdGEkc3VwcF9XX3JhdGlvKQ0KDQojIGNyZWF0ZSB2YXJpYWJsZSBvZiByYXRpbyBvZiBvcHBvc2l0aW9uIHRvIFcNCg0KZnVsbF9kYXRhJG9wcF9XX3JhdGlvIDwtIGZ1bGxfZGF0YSRvcHBzaXplX25vcm0gLyBmdWxsX2RhdGEkV19ub3JtDQpzdW1tYXJ5KGZ1bGxfZGF0YSRvcHBfV19yYXRpbykNCg0KIyBjcmVhdGUgdmFyaWFibGVzIGZvciBDb2xkIFdhciBhbmQgV2FyIG9uIFRlcnJvciAocG9zdC05MTEpDQoNCmZ1bGxfZGF0YSRDb2xkV2FyIDwtIGlmZWxzZShmdWxsX2RhdGEkeWVhciA8IDE5OTEsMSwwKQ0Kc3VtbWFyeShmdWxsX2RhdGEkQ29sZFdhcikNCg0KZnVsbF9kYXRhJFdhck9uVGVycm9yIDwtIGlmZWxzZShmdWxsX2RhdGEkeWVhciA+IDIwMDEsMSwwKQ0Kc3VtbWFyeShmdWxsX2RhdGEkV2FyT25UZXJyb3IpDQoNCg0KIyBjcmVhdGUgZGF0YWZyYW1lIHdpdGgganVzdCBub24tZGVtb2NyYWN0aWMgc3VwcG9ydGVyIHN0YXRlcw0KIyANCg0KZnVsbF9kYXRhJHN1cHBfYXV0b2NyYXRpYyA8LSBpZmVsc2UoZnVsbF9kYXRhJHN1cHBvcnRlcl9wb2xpdHkgPCAtNSwxLDApDQpzdW1tYXJ5KGZ1bGxfZGF0YSRzdXBwX2F1dG9jcmF0aWMpDQoNCmF1dG9jcmFjaWVzX2RhdGEgPC0gZnVsbF9kYXRhW3doaWNoKGZ1bGxfZGF0YSRzdXBwX2F1dG9jcmF0aWMgPT0gMSksXQ0KDQoNCg0KDQpgYGANCmBgYHtyfQ0KDQpsaWJyYXJ5KE1BU1MpDQoNCiMgbW9kZWxzIHdpdGgganVzdCBvcHBvc2l0aW9uIGFuZCBzdXBwb3J0IGdyb3VwIHNpemVzDQojIA0KDQptb2RlbF9vcHBvc2l0aW9uIDwtIGdsbS5uYihOdW1OQUdfUyB+IHRhcmdfZGVtb2NyYXRpYyArIG9wcHNpemVfbm9ybSArIFdhck9uVGVycm9yICsgQ29sZFdhciwgZGF0YSA9IGF1dG9jcmFjaWVzX2RhdGEpDQpzdW1tYXJ5KG1vZGVsX29wcG9zaXRpb24pDQoNCm1vZGVsX29wcG9zaXRpb25UcmFpbkNhbXAgPC0gZ2xtLm5iKE51bV9TX1RyYWluQ2FtcCB+IHRhcmdfZGVtb2NyYXRpYyArIG9wcHNpemVfbm9ybSArIFdhck9uVGVycm9yICsgQ29sZFdhciwgZGF0YSA9IGF1dG9jcmFjaWVzX2RhdGEpDQpzdW1tYXJ5KG1vZGVsX29wcG9zaXRpb25UcmFpbkNhbXApDQoNCg0KbW9kZWxfc3VwcG9ydCA8LSBnbG0ubmIoTnVtTkFHX1MgfiB0YXJnX2RlbW9jcmF0aWMgKyBzdXBwc2l6ZV9ub3JtICsgIFdhck9uVGVycm9yICsgQ29sZFdhciwgZGF0YSA9IGF1dG9jcmFjaWVzX2RhdGEpDQpzdW1tYXJ5KG1vZGVsX3N1cHBvcnQpDQoNCm1vZGVsX3N1cHBvcnRUcmFpbkNhbXAgPC0gZ2xtLm5iKE51bV9TX1RyYWluQ2FtcCB+IHRhcmdfZGVtb2NyYXRpYyArIHN1cHBzaXplX25vcm0gKyBXYXJPblRlcnJvciArIENvbGRXYXIsIGRhdGEgPSBhdXRvY3JhY2llc19kYXRhKQ0Kc3VtbWFyeShtb2RlbF9zdXBwb3J0VHJhaW5DYW1wKQ0KICAgICAgICANCg0KDQojIyBNb2RlbCBXIC0ganVzdCB0aGUgZWZmZWN0IG9mIFcNCiMjIA0KDQoNCm1vZGVsV1RyYWluQ2FtcCA8LSBnbG0ubmIoTnVtX1NfVHJhaW5DYW1wIH4gdGFyZ19kZW1vY3JhdGljICsgV19ub3JtICsgV2FyT25UZXJyb3IgKyBDb2xkV2FyLCBkYXRhID0gYXV0b2NyYWNpZXNfZGF0YSkNCnN1bW1hcnkobW9kZWxXVHJhaW5DYW1wKQ0KDQojcmF0aW8gb2YgYWN0dWFsIHN1cHBvcnQgdG8gVyAtIGhvdyBjbG9zZSBhcmUgdGhleSB0byBhIHRydWx5IG1pbmltYWwgd2lubmluZyBjb2FsaXRpb24NCiMNCm1vZGVsMVRyYWluQ2FtcCA8LSBnbG0ubmIoTnVtX1NfVHJhaW5DYW1wIH4gdGFyZ19kZW1vY3JhdGljICsgc3VwcF9XX3JhdGlvICsgV2FyT25UZXJyb3IgKyBDb2xkV2FyLCBkYXRhID0gYXV0b2NyYWNpZXNfZGF0YSkNCnN1bW1hcnkobW9kZWwxVHJhaW5DYW1wKQ0KDQoNCiMgcmF0aW8gb2Ygb3Bwb25lbnQgc2l6ZSB0byBXIC0gaG93IGNsb3NlIGFyZSB0aGUgb3Bwb3NpdGlvbiB0byBoYXZpbmcgYSBtaW5pbWFsIHdpbm5pbmcgY29hbGl0aW9uIG9mIHRoZWlyIG93bg0KDQptb2RlbDJUcmFpbkNhbXAgPC0gIGdsbS5uYihOdW1fU19UcmFpbkNhbXAgfiB0YXJnX2RlbW9jcmF0aWMgKyBvcHBfV19yYXRpbyArIFdhck9uVGVycm9yICsgQ29sZFdhciwgZGF0YSA9IGF1dG9jcmFjaWVzX2RhdGEpDQpzdW1tYXJ5KG1vZGVsMlRyYWluQ2FtcCkNCg0KDQoNCiMgcmF0aW8gb2Ygb3Bwb3NpdGlvbiB0byBzdXBwb3J0ZXJzIC0gaGVhZCB0byBoZWFkIG1hdGNoIHVwDQojIA0KDQptb2RlbDNUcmFpbkNhbXAgPC0gZ2xtLm5iKE51bV9TX1RyYWluQ2FtcCB+IHRhcmdfZGVtb2NyYXRpYyArIG9wcF9zdXBwX3JhdGlvICsgV2FyT25UZXJyb3IgKyBDb2xkV2FyLCBkYXRhID0gYXV0b2NyYWNpZXNfZGF0YSkNCnN1bW1hcnkobW9kZWwzVHJhaW5DYW1wKQ0KDQpsaWJyYXJ5KHNqUGxvdCkNCg0KDQpgYGANCg0K</div>
 
 
 

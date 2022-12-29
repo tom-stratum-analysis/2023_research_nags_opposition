@@ -161,14 +161,24 @@ summary(full_data$supp_W_ratio)
 full_data$opp_W_ratio <- full_data$oppsize_norm / full_data$W_norm
 summary(full_data$opp_W_ratio)
 
+# create variables for Cold War and War on Terror (post-911)
+
+full_data$ColdWar <- ifelse(full_data$year < 1991,1,0)
+summary(full_data$ColdWar)
+
+full_data$WarOnTerror <- ifelse(full_data$year > 2001,1,0)
+summary(full_data$WarOnTerror)
+
 
 # create dataframe with just non-democractic supporter states
 # 
 
-full_data$supp_autocratic <- ifelse(full_data$supporter_polity < 5,1,0)
+full_data$supp_autocratic <- ifelse(full_data$supporter_polity < -5,1,0)
 summary(full_data$supp_autocratic)
 
 autocracies_data <- full_data[which(full_data$supp_autocratic == 1),]
+
+
 
 
 ```
@@ -179,38 +189,48 @@ library(MASS)
 # models with just opposition and support group sizes
 # 
 
-model_opposition <- glm.nb(targ_democratic ~ oppsize_norm + supporter_polity, data = autocracies_data)
+model_opposition <- glm.nb(NumNAG_S ~ targ_democratic + oppsize_norm + WarOnTerror + ColdWar, data = autocracies_data)
 summary(model_opposition)
-        
-model_support <- glm.nb(targ_democratic ~ suppsize_norm + supporter_polity, data = autocracies_data)
+
+model_oppositionTrainCamp <- glm.nb(Num_S_TrainCamp ~ targ_democratic + oppsize_norm + WarOnTerror + ColdWar, data = autocracies_data)
+summary(model_oppositionTrainCamp)
+
+
+model_support <- glm.nb(NumNAG_S ~ targ_democratic + suppsize_norm +  WarOnTerror + ColdWar, data = autocracies_data)
 summary(model_support)
+
+model_supportTrainCamp <- glm.nb(Num_S_TrainCamp ~ targ_democratic + suppsize_norm + WarOnTerror + ColdWar, data = autocracies_data)
+summary(model_supportTrainCamp)
         
 
 
 ## Model W - just the effect of W
 ## 
 
-modelw <- glm.nb(targ_democratic ~ W_norm, data = autocracies_data)
-summary(modelw)
+
+modelWTrainCamp <- glm.nb(Num_S_TrainCamp ~ targ_democratic + W_norm + WarOnTerror + ColdWar, data = autocracies_data)
+summary(modelWTrainCamp)
 
 #ratio of actual support to W - how close are they to a truly minimal winning coalition
 #
-model1 <- glm.nb(targ_democratic ~ supp_W_ratio + supporter_polity, data = autocracies_data)
-summary(model1)
+model1TrainCamp <- glm.nb(Num_S_TrainCamp ~ targ_democratic + supp_W_ratio + WarOnTerror + ColdWar, data = autocracies_data)
+summary(model1TrainCamp)
 
 
 # ratio of opponent size to W - how close are the opposition to having a minimal winning coalition of their own
 
-model2 <- glm.nb(targ_democratic ~ opp_W_ratio + supporter_polity, data = autocracies_data)
-summary(model2)
+model2TrainCamp <-  glm.nb(Num_S_TrainCamp ~ targ_democratic + opp_W_ratio + WarOnTerror + ColdWar, data = autocracies_data)
+summary(model2TrainCamp)
+
+
 
 # ratio of opposition to supporters - head to head match up
+# 
 
-model3 <- glm.nb(targ_democratic ~ opp_supp_ratio + supporter_polity, data = autocracies_data)
-summary(model3)
+model3TrainCamp <- glm.nb(Num_S_TrainCamp ~ targ_democratic + opp_supp_ratio + WarOnTerror + ColdWar, data = autocracies_data)
+summary(model3TrainCamp)
 
-model4 <- glm.nb(targ_democratic ~ opp_supp_ratio + supp_W_ratio + supporter_polity, data = autocracies_data)
-summary(model4)
+library(sjPlot)
 
 
 ```
