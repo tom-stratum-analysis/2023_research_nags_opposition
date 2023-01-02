@@ -1,28 +1,31 @@
 ---
 title: "R Notebook"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
+```{r echo = FALSE}
 
-
-
-```{r}
+options(scipen=999)
 
 #Loading NAGS dyadic (supporter-target) data
 
 library(here)
 library(readr)
 nags_data1 <- read_delim(here("data","Dyadic_Target-Supporter_active_support.csv"), delim = ";", escape_double = FALSE, trim_ws = TRUE)
-View(nags_data1)
+
 
 nags_data1 <- nags_data1[which(nags_data1$Year > 1945),]
 
 nags_data1$year <- nags_data1$Year
 nags_data1$COWcode <- nags_data1$SupNum_COW
 
+head(nags_data1)
+
 ```
 
-```{r}
+```{r echo=FALSE}
 
 # creating polity scores for supporter and target countries
 
@@ -30,7 +33,7 @@ nags_data1$COWcode <- nags_data1$SupNum_COW
 #
 library(readxl)
 support_polity <- read_excel("data/p5v2018.xls")
-View(support_polity)
+head(support_polity)
 
 #create score labels for supporters
 support_polity$supporter_p5 <- support_polity$p5
@@ -52,7 +55,7 @@ support_polity <- support_polity[c(6,38:46)]
 #load polity data set for targets
 #
 target_polity <- read_excel("data/p5v2018.xls")
-View(target_polity)
+head(target_polity)
 
 #create score labels for targets
 target_polity$target_p5 <- target_polity$p5
@@ -72,30 +75,74 @@ target_polity <- target_polity[c(6,38:46)]
 
 ```
 
-```{r}
+```{r echo=FALSE}
 # Merge polity data for supporters
 library(dplyr)
-nags_data2 <- left_join(nags_data1,support_polity, by = c("SupNum_COW","year"))
+nags_data1 <- left_join(nags_data1,support_polity, by = c("SupNum_COW","year"))
 
 # Merge polity data for targets
 
-nags_data3 <- left_join(nags_data2,target_polity, by = c("TarNum_COW","year"))
+nags_data1 <- left_join(nags_data1,target_polity, by = c("TarNum_COW","year"))
+
+# add national capabilities data for supporters and targets
+
+# load national material capabilities data
+# 
+
+NMC<- read_csv(here("data","NMC-60-abridged.csv"))
+head(NMC)
+
+NMC$COWcode <- NMC$ccode
+
+NMC <- NMC[which(NMC$year > 1945 & NMC$year < 2011),]
+
+NMC <- NMC[c(3:12)]
+
+NMC_supp <- NMC
+
+NMC_supp$SupNum_COW <- NMC_supp$COWcode
+NMC_supp$supporter_milex <- NMC_supp$milex
+NMC_supp$supporter_milper <- NMC_supp$milper
+NMC_supp$supporter_irst <- NMC_supp$irst
+NMC_supp$supporter_pec <- NMC_supp$pec
+NMC_supp$supporter_tpop <- NMC_supp$tpop
+NMC_supp$supporter_upop <- NMC_supp$upop
+NMC_supp$supporter_cinc <- NMC_supp$cinc
+
+NMC_supp <- NMC_supp[c(1,11:18)]
+
+NMC_targ <- NMC
+
+NMC_targ$TarNum_COW <- NMC_targ$COWcode
+NMC_targ$target_milex <- NMC_targ$milex
+NMC_targ$target_milper <- NMC_targ$milper
+NMC_targ$target_irst <- NMC_targ$irst
+NMC_targ$target_pec <- NMC_targ$pec
+NMC_targ$target_tpop <- NMC_targ$tpop
+NMC_targ$target_upop <- NMC_targ$upop
+NMC_targ$target_cinc <- NMC_targ$cinc
+
+NMC_targ <- NMC_targ[c(1,11:18)]
+
+nags_data1 <- left_join(nags_data1,NMC_supp, by = c("SupNum_COW","year"))
+
+nags_data1 <- left_join(nags_data1,NMC_targ, by = c("TarNum_COW","year"))
 
 
 ```
 
 
 
-```{r}
+```{r echo=FALSE}
 
 countries_data <- read_csv(here("data","vdem_plus_w.csv"))
-View(countries_data)
+head(countries_data)
 
 countries_data <- countries_data[which(countries_data$year < 2011),]
 
 library(dplyr)
 
-full_data <- left_join(nags_data3,countries_data, by = c("COWcode","year"))
+full_data <- left_join(nags_data1,countries_data, by = c("COWcode","year"))
 
 # vdem_select1 <- vdem_w_select[which(vdem_w_select$year > 1945),]
 
@@ -105,20 +152,33 @@ full_data <- left_join(nags_data3,countries_data, by = c("COWcode","year"))
 ```
 
 
-```{r}
-summary(full_data$W_norm)
+## To Do (variables)
+
+                + Use Cshapes to add minimum distance between states in dyad - done
+                + Use Cshapes to add distance between capitals in dyad - done
+                + Add variable for violent repression (PTS data has limitations - only post-1976 and includes all state violence not just political repression)
+                
+## Additional Sources
+
+                + For protests, riots, and violence against civilians)
+                (https://acleddata.com/data-export-tool/
+                + For general levels of poltical terror - Political Terror Scale
+
+
+```{r echo=FALSE}
+# summary(full_data$W_norm)
 
 # create a democracy target variable
 # 
 
 
 full_data$targ_democratic <- ifelse(full_data$target_polity > 6,1,0)
-summary(full_data$targ_democratic)
+# summary(full_data$targ_democratic)
 
 #create a binary democracy variable for supporters 
 
 full_data$supp_democratic <- ifelse(full_data$supporter_polity > 6,1,0)
-summary(full_data$supp_democratic)
+# summary(full_data$supp_democratic)
 
 
 
@@ -148,43 +208,166 @@ summary(full_data$oppsize_norm)
 # create a variable of ratio of opposition to support group size
 
 full_data$opp_supp_ratio <- full_data$oppsize_norm / full_data$suppsize_norm
-summary(full_data$opp_supp_ratio)
+# summary(full_data$opp_supp_ratio)
 
 # create variable of ratio of support size score to W score
 # 
 
 full_data$supp_W_ratio <- full_data$suppsize_norm / full_data$W_norm
-summary(full_data$supp_W_ratio)
+# summary(full_data$supp_W_ratio)
+
 
 # create variable of ratio of opposition to W
 
 full_data$opp_W_ratio <- full_data$oppsize_norm / full_data$W_norm
-summary(full_data$opp_W_ratio)
+# summary(full_data$opp_W_ratio)
+
 
 # create variables for Cold War and War on Terror (post-911)
 
 full_data$ColdWar <- ifelse(full_data$year < 1991,1,0)
-summary(full_data$ColdWar)
+# summary(full_data$ColdWar)
 
 full_data$WarOnTerror <- ifelse(full_data$year > 2001,1,0)
-summary(full_data$WarOnTerror)
+# summary(full_data$WarOnTerror)
+
+
+## use cshapes data to include minimum distance and distance between capitals
+## 
+
+library(cshapes)
+
+#create a vector of dates for years in data set
+
+cap_dist <- distlist(date = as.Date("2010-01-01"), type = "capdist", useGW = FALSE)
+
+cap_dist$SupNum_COW <- cap_dist$ccode1
+cap_dist$TarNum_COW <- cap_dist$ccode2
+cap_dist <- cap_dist[c(3:5)]
+
+# min_dist <- distlist(date = as.Date("2010-01-01"), type = "mindist", useGW = FALSE)
+# 
+# min_dist$SupNum_COW <- min_dist$ccode1
+# min_dist$TarNum_COW <- min_dist$ccode2
+# min_dist <- min_dist[c(3:5)]
+# 
+# write.csv(min_dist, file = here("data","min_dist.csv"))
+# 
+
+min_dist <- read_csv(here("data","min_dist.csv"))
+min_dist <- min_dist[c(2:4)]
+
+full_data <- left_join(full_data,cap_dist, by = c("SupNum_COW","TarNum_COW"))
+
+full_data <- left_join(full_data,min_dist, by = c("SupNum_COW","TarNum_COW"))
+
+#create binary variable for autocracy (used later to create subsets)
+full_data$supp_autocratic <- ifelse(full_data$supporter_polity < -5,1,0)
+
+
+# Political Terror Scale data
+# 
+
+pts <- read.csv(here("data","PTS-2022.csv"))
+head(pts)
+
+#prepare data to merge
+
+pts$SupNum_COW <- pts$COW_Code_N
+pts$year <- pts$Year
+
+pts <- pts[6:16]
+
+# create a new dataframe with all other data plus pts data
+
+pts_full_data <- left_join(full_data,pts, by = c("SupNum_COW","year"))
+pts_full_data <- pts_full_data[which(pts_full_data$year >= 1976),]
+
 
 
 # create dataframe with just non-democractic supporter states
 # 
 
-full_data$supp_autocratic <- ifelse(full_data$supporter_polity < -5,1,0)
-summary(full_data$supp_autocratic)
+pts_autocracies <- pts_full_data[which(pts_full_data$supp_autocratic == 1),]
 
 autocracies_data <- full_data[which(full_data$supp_autocratic == 1),]
 
 
+```
+
+## Descriptive data
+
+
+```{r echo=FALSE, comment = ""}
+
+# ratio of opposition size measure to W measure (both normalized)
+# 
+cat("ratio of opposition size measure to W measure (both normalized)")
+summary(full_data$opp_W_ratio)
+
+# ratio of support group size measure to W measure (both normalized)
+summary(full_data$supp_W_ratio)
+
+# ratio of opposition group size measure to support group size measure to W measure (both normalized)
+summary(full_data$opp_supp_ratio)
+
+# supporter is democratic (binary)
+summary(full_data$supp_democratic)
+
+#target is democratic (binary)
+summary(full_data$targ_democratic)
+
+#normalized measure of W based on Smith and Bueno de Mesquita 2022
+summary(full_data$W_norm)
+
+## Autocracy binary in full data (mean is proportion)
+## 
+summary(full_data$supp_autocratic)
 
 
 ```
-```{r}
+
+
+
+## hypotheses
+
+                + H1 Regimes with higher levels of opposition are more likely to support NAGS, all else equal
+                + H2 Regimes with higher levels of opposition are more likely to support NAGS that target democracies, all else equal
+                + H3 Regimes with lower levels of military capability are more likely to support NAGS, all else equal
+                + H4 Regimes with lower levels of millitary capability are more likely to support NAGs that target democracies, all else equal
+                + H5 If regimes substitute NAGS for repression, regimes with lower levels of repression are more likely to support NAGS, all else equal.
+                + H6 If signals are successful, regimes with higher support for NAGS will have lower levels of protest 
+                
+## Models
+
+```{r echo=FALSE}
 
 library(MASS)
+
+
+## model on legitimation by ideology autocracies only
+## 
+
+
+model_ideo <- glm.nb(NumNAG_S ~ v2exl_legitideol, data = autocracies_data)
+summary(model_ideo)
+
+
+## model on full data with just target democracy variable
+## 
+
+model_base <- glm.nb(NumNAG_S ~ targ_democratic, data = full_data)
+summary(model_base)
+
+# model base with control for time period variables
+
+model_basec <- glm.nb(NumNAG_S ~ targ_democratic + WarOnTerror + ColdWar, data = full_data)
+summary(model_basec)
+
+## model base with supporter democratic or non-democratic
+
+model_based <- glm.nb(NumNAG_S ~ targ_democratic + supp_democratic + WarOnTerror + ColdWar, data = full_data)
+summary(model_based)
 
 # models with just opposition and support group sizes
 # 
@@ -230,8 +413,26 @@ summary(model2TrainCamp)
 model3TrainCamp <- glm.nb(Num_S_TrainCamp ~ targ_democratic + opp_supp_ratio + WarOnTerror + ColdWar, data = autocracies_data)
 summary(model3TrainCamp)
 
-library(sjPlot)
+
+## multivariate model - ideology, opp_supp_ratio, strategic variables
+##  v2exl_legitideol
+
+modelmulti_traincamp <- glm.nb(Num_S_TrainCamp ~ targ_democratic + opp_supp_ratio + v2exl_legitideol + WarOnTerror + ColdWar + supporter_milex + target_milex, data = autocracies_data)
+summary(modelmulti_traincamp)
+
+modelmulti_traincamp2 <- glm.nb(Num_S_TrainCamp ~ targ_democratic + opp_supp_ratio + v2exl_legitideol + WarOnTerror + ColdWar + supporter_cinc + target_cinc, data = autocracies_data)
+summary(modelmulti_traincamp2)
+
 
 
 ```
+
+## Model Plots and Predictions
+
+```{r echo=FALSE}
+
+
+
+```
+
 
