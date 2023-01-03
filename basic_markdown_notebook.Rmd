@@ -297,6 +297,8 @@ autocracies_data <- full_data[which(full_data$supp_autocratic == 1),]
 
 ## Descriptive data
 
+### Summary Statistics
+
 
 ```{r echo=FALSE, comment = ""}
 
@@ -324,12 +326,26 @@ summary(full_data$W_norm)
 ## 
 summary(full_data$supp_autocratic)
 
+summary(autocracies_data$Num_S_TrainCamp)
+
+
+```
+
+### Plots
+
+```{r echo=FALSE}
+
+hist(full_data$opp_supp_ratio, main = "Histogram of \n Opposition to support ratio")
+
+hist(full_data$Num_S_TrainCamp, main = "Histogram of Number of groups \n supported with training camps \n all regime types")
+
+hist(autocracies_data$Num_S_TrainCamp, main = "Histogram of Number of groups \n supported with training camps \n autocracies only")
+
 
 ```
 
 
-
-## hypotheses
+## Hypotheses
 
                 + H1 Regimes with higher levels of opposition are more likely to support NAGS, all else equal
                 + H2 Regimes with higher levels of opposition are more likely to support NAGS that target democracies, all else equal
@@ -337,20 +353,257 @@ summary(full_data$supp_autocratic)
                 + H4 Regimes with lower levels of millitary capability are more likely to support NAGs that target democracies, all else equal
                 + H5 If regimes substitute NAGS for repression, regimes with lower levels of repression are more likely to support NAGS, all else equal.
                 + H6 If signals are successful, regimes with higher support for NAGS will have lower levels of protest 
+        
                 
 ## Models
 
-```{r echo=FALSE}
+### Issues
 
+                + Zero-inflation
+                + overdispersion
+                
+### Poisson, quasipoisson, and hurdle models for legitimating ideology               
+                
+```{r echo=FALSE}
 library(MASS)
+library(pscl)
 
 
 ## model on legitimation by ideology autocracies only
 ## 
 
 
-model_ideo <- glm.nb(NumNAG_S ~ v2exl_legitideol, data = autocracies_data)
+model_ideo <- glm(NumNAG_S ~ v2exl_legitideol, family  = poisson(link = "log"), data = autocracies_data)
 summary(model_ideo)
+exp(coef(model_ideo))
+
+model_ideo_qp <- glm(NumNAG_S ~ v2exl_legitideol, family  = quasipoisson(link = "log"), data = autocracies_data)
+summary(model_ideo_qp)
+exp(coef(model_ideo_qp))
+
+
+model_ideo_hurdle <- hurdle(NumNAG_S ~ v2exl_legitideol | v2exl_legitideol, data = autocracies_data)
+summary(model_ideo_hurdle)
+
+hurdle_part_ideo <- glm(I(NumNAG_S>0) ~ v2exl_legitideol, family  = binomial(link = "logit"), data = autocracies_data)
+summary(hurdle_part_ideo)
+exp(coef(hurdle_part_ideo))
+
+## Exponentiated coefficients
+expCoef <- exp(coef((model_ideo_hurdle)))
+expCoef <- matrix(expCoef, ncol = 2)
+rownames(expCoef) <- names(coef(hurdle_part_ideo))
+colnames(expCoef) <- c("Count_model","Zero_hurdle_model")
+expCoef
+
+
+
+
+```
+
+### Models for hypotheses
+
+#### H1 Regimes with higher levels of opposition are more likely to support NAGS, all else equal
+
+```{r echo=FALSE}
+
+formulah1 <- NumNAG_S ~ targ_democratic + oppsize_norm + WarOnTerror + ColdWar + supporter_cinc + target_cinc + capdist
+
+formulah1b <- Num_S_TrainCamp ~ targ_democratic + oppsize_norm + WarOnTerror + ColdWar + supporter_cinc + target_cinc + capdist
+        
+        
+#Poisson model using Number of groups supported
+
+h1_numS <- glm(formula = formulah1, family  = poisson(link = "log"), data = autocracies_data)
+summary(h1_numS)
+exp(coef(h1_numS))
+
+# quasipoisson model using number of groups supported
+
+h1_numSq <- glm(formula = formulah1, family  = quasipoisson(link = "log"), data = autocracies_data)
+summary(h1_numSq)
+exp(coef(h1_numSq))
+
+# negative binomial model using number of groups supported
+
+h1_numSnb <- glm.nb(formula = formulah1, data = autocracies_data)
+summary(h1_numSnb)
+exp(coef(h1_numSnb))
+
+
+# Hurdle model
+
+h1_hurdle <- hurdle(formula = formulah1, data = autocracies_data)
+summary(h1_hurdle)
+
+h1_hurdle_part <- glm(I(NumNAG_S>0) ~ targ_democratic + oppsize_norm + WarOnTerror + ColdWar + supporter_cinc + target_cinc + capdist, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h1_hurdle_part)
+exp(coef(h1_hurdle_part))
+
+## Exponentiated coefficients
+expCoefh1 <- exp(coef((h1_hurdle)))
+expCoefh1 <- matrix(expCoefh1, ncol = 2)
+rownames(expCoefh1) <- names(coef(h1_hurdle_part))
+colnames(expCoefh1) <- c("Count_model","Zero_hurdle_model")
+expCoefh1
+
+#Model using number of groups with training camps in country
+#
+
+#Poisson model using Number of groups with training camps in country
+
+h1_numSb <- glm(formula = formulah1b, family  = poisson(link = "log"), data = autocracies_data)
+summary(h1_numSb)
+exp(coef(h1_numSb))
+
+# quasipoisson model using number of groups supported
+
+h1_numSqb <- glm(formula = formulah1b, family  = quasipoisson(link = "log"), data = autocracies_data)
+summary(h1_numSqb)
+exp(coef(h1_numSqb))
+
+# negative binomial model using number of groups supported
+
+h1_numSnbb <- glm.nb(formula = formulah1b, data = autocracies_data)
+summary(h1_numSnbb)
+exp(coef(h1_numSnbb))
+
+
+# Hurdle model
+
+h1_hurdleb <- hurdle(formula = formulah1b, data = autocracies_data)
+summary(h1_hurdleb)
+
+h1_hurdle_partb <- glm(I(Num_S_TrainCamp>0) ~ targ_democratic + oppsize_norm + WarOnTerror + ColdWar + supporter_cinc + target_cinc + capdist, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h1_hurdle_partb)
+exp(coef(h1_hurdle_partb))
+
+## Exponentiated coefficients
+expCoefh1b <- round(exp(coef((h1_hurdleb))), digits = 5)
+expCoefh1b <- matrix(expCoefh1b, ncol = 2)
+rownames(expCoefh1b) <- names(coef(h1_hurdle_partb))
+colnames(expCoefh1b) <- c("Count_model","Zero_hurdle_model")
+expCoefh1b
+
+```
+#### H2: Regimes with higher levels of opposition are more likely to support NAGS that target democracies, all else equal
+
+```{r echo=FALSE}
+
+formulah2 <- NumNAG_S ~ targ_democratic * oppsize_norm + WarOnTerror + ColdWar + supporter_cinc + target_cinc + capdist
+
+formulah2b <- Num_S_TrainCamp ~ targ_democratic * oppsize_norm + WarOnTerror + ColdWar + supporter_cinc + target_cinc + capdist
+
+#Poisson model using Number of groups supported
+
+h2_numS <- glm(formula = formulah2, family  = poisson(link = "log"), data = autocracies_data)
+summary(h2_numS)
+exp(coef(h2_numS))
+
+# quasipoisson model using number of groups supported
+
+h2_numSq <- glm(formula = formulah2, family  = quasipoisson(link = "log"), data = autocracies_data)
+summary(h2_numSq)
+exp(coef(h2_numSq))
+
+# negative binomial model using number of groups supported
+
+h2_numSnb <- glm.nb(formula = formulah2, data = autocracies_data)
+summary(h2_numSnb)
+exp(coef(h2_numSnb))
+
+
+# Hurdle model
+
+h2_hurdle <- hurdle(formula = formulah2, data = autocracies_data)
+summary(h2_hurdle)
+
+h2_hurdle_part <- glm(I(NumNAG_S>0) ~ targ_democratic * oppsize_norm + WarOnTerror + ColdWar + supporter_cinc + target_cinc + capdist, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h2_hurdle_part)
+exp(coef(h2_hurdle_part))
+
+## Exponentiated coefficients
+expCoefh2 <- exp(coef((h2_hurdle)))
+expCoefh2 <- matrix(expCoefh2, ncol = 2)
+rownames(expCoefh2) <- names(coef(h2_hurdle_part))
+colnames(expCoefh2) <- c("Count_model","Zero_hurdle_model")
+expCoefh2
+
+
+#Model using number of groups with training camps in country
+#
+
+#Poisson model using Number of groups with training camps in country
+
+h2_numSb <- glm(formula = formulah2b, family  = poisson(link = "log"), data = autocracies_data)
+summary(h2_numSb)
+exp(coef(h2_numSb))
+
+# quasipoisson model using number of groups supported
+
+h2_numSqb <- glm(formula = formulah2b, family  = quasipoisson(link = "log"), data = autocracies_data)
+summary(h2_numSqb)
+exp(coef(h2_numSqb))
+
+# negative binomial model using number of groups supported
+
+h2_numSnbb <- glm.nb(formula = formulah2b, data = autocracies_data)
+summary(h2_numSnbb)
+exp(coef(h2_numSnbb))
+
+
+# Hurdle model
+
+h2_hurdleb <- hurdle(formula = formulah2b, data = autocracies_data)
+summary(h2_hurdleb)
+
+h2_hurdle_partb <- glm(I(Num_S_TrainCamp>0) ~ targ_democratic * oppsize_norm + WarOnTerror + ColdWar + supporter_cinc + target_cinc + capdist, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h2_hurdle_partb)
+exp(coef(h2_hurdle_partb))
+
+## Exponentiated coefficients
+expCoefh2b <- round(exp(coef((h2_hurdleb))), digits = 5)
+expCoefh2b <- matrix(expCoefh2b, ncol = 2)
+rownames(expCoefh2b) <- names(coef(h2_hurdle_partb))
+colnames(expCoefh2b) <- c("Count_model","Zero_hurdle_model")
+expCoefh2b
+
+```
+
+
+#### H3 Regimes with lower levels of military capability are more likely to support NAGS, all else equal
+
+#### H4 Regimes with lower levels of millitary capability are more likely to support NAGs that target democracies, all else equal
+             
+#### H5 If regimes substitute NAGS for repression, regimes with lower levels of repression are more likely to support NAGS, all else equal.
+             
+#### H6 If signals are successful, regimes with higher support for NAGS will have lower levels of protest 
+
+
+
+
+```{r echo=FALSE}
+
+
+library(MASS)
+library(pscl)
+
+
+## model on legitimation by ideology autocracies only
+## 
+
+
+model_ideo <- glm(NumNAG_S ~ v2exl_legitideol, family  = poisson(link = "log"), data = autocracies_data)
+summary(model_ideo)
+exp(coef(model_ideo))
+
+model_ideo_qp <- glm(NumNAG_S ~ v2exl_legitideol, family  = quasipoisson(link = "log"), data = autocracies_data)
+summary(model_ideo_qp)
+exp(coef(model_ideo_qp))
+
+
+model_ideo_hurdle <- hurdle(NumNAG_S ~ v2exl_legitideol | v2exl_legitideol, data = autocracies_data)
+summary(model_ideo_hurdle)
 
 
 ## model on full data with just target democracy variable
