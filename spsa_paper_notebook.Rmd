@@ -1,0 +1,49 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+editor_options: 
+  chunk_output_type: console
+---
+
+## Data Load
+
+## Summary Stats
+
+## Summary Plots
+
+## Models
+
+- HW: Autocratic regimes with smaller W will be more likely to support NAGS, all else equal. 
+
+- H1: Autocratic regimes with large opposition groups will be more likely to support NAGS, all else equal. 
+
+                + H2a: Higher likelihood of supporting at least one NAG.
+
+                + H2b: Higher number of NAGS supported.
+
+- H2: Autocratic regimes with large opposition groups will be more likely to support NAGS by hosting training camps, all else equal. 
+
+                + H2a: Higher likelihood of supporting at least one NAG.
+
+                + H2b: Higher number of NAGS supported.
+
+- H3: Autocratic regimes with large opposition groups will be more likely to support NAGS that target democracies.\\
+
+                + H3a: Higher likelihood of supporting at least one NAG that targets a democracy.
+
+                + H3b: Number of NAGs that target a democracy supported will be higher. 
+
+
+- H4: Autocratic regimes with large opposition groups will be more likely to support NAGS that target democracies by hosting training camps, all else equal. 
+
+                + H4a: Higher likelihood of supporting at least one NAG targeting democracies by hosting training camps.
+
+                + H4b: Number of NAGs supported by hosting training camps will be higher. 
+
+
+
+## Model plots
+
+## Additional checks

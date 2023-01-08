@@ -323,6 +323,10 @@ pts_autocracies <- pts_full_data[which(pts_full_data$supp_autocratic == 1),]
 
 autocracies_data <- full_data[which(full_data$supp_autocratic == 1),]
 
+write.csv(full_data, here("data","full_data.csv"))
+
+write.csv(autocracies_data, here("data","autocracies_data.csv"))
+
 
 ```
 
@@ -408,6 +412,14 @@ library(MASS)
 library(pscl)
 
 
+## model on W_norm
+## 
+
+model_w <- glm(NumNAG_S ~ W_norm + WarOnTerror + ColdWar + capdist, family  = poisson(link = "log"), data = autocracies_data)
+summary(model_w)
+
+
+
 ## model on legitimation by ideology autocracies only
 ## 
 
@@ -421,7 +433,7 @@ summary(model_ideo_qp)
 exp(coef(model_ideo_qp))
 
 
-model_ideo_hurdle <- hurdle(NumNAG_S ~ v2exl_legitideol | v2exl_legitideol, data = autocracies_data)
+model_ideo_hurdle <- hurdle(NumNAG_S ~ v2exl_legitideol | v2exl_legitideol, data = autocracies_data, dist = "poisson")
 summary(model_ideo_hurdle)
 
 hurdle_part_ideo <- glm(I(NumNAG_S>0) ~ v2exl_legitideol, family  = binomial(link = "logit"), data = autocracies_data)
@@ -446,9 +458,9 @@ expCoef
 
 ```{r echo=FALSE}
 
-formulah1 <- NumNAG_S ~ oppsize_norm + WarOnTerror + ColdWar + capdist
+formulah1 <- NumNAG_S ~ oppsize_norm + WarOnTerror + ColdWar + capdist 
 
-formulah1b <- Num_S_TrainCamp ~ oppsize_norm + WarOnTerror + ColdWar + capdist
+formulah1b <- Num_S_TrainCamp ~ oppsize_norm + WarOnTerror + ColdWar + capdist 
         
         
 #Poisson model using Number of groups supported
@@ -541,7 +553,7 @@ expCoefh1b
 
 formulah2 <- NumNAG_S ~ targ_democratic * oppsize_norm + WarOnTerror + ColdWar + capdist
 
-formulah2b <- Num_S_TrainCamp ~ targ_democratic * oppsize_norm + WarOnTerror + ColdWar + capdist
+formulah2b <- Num_S_TrainCamp ~ targ_democratic * oppsize_norm + WarOnTerror + ColdWar + capdist + W_norm
 
 #Poisson model using Number of groups supported
 
@@ -598,7 +610,7 @@ exp(coef(h2_numSnbb))
 h2_hurdleb <- hurdle(formula = formulah2b, data = autocracies_data)
 summary(h2_hurdleb)
 
-h2_hurdle_partb <- glm(I(Num_S_TrainCamp>0) ~ targ_democratic * oppsize_norm + WarOnTerror + ColdWar + capdist, family  = binomial(link = "logit"), data = autocracies_data)
+h2_hurdle_partb <- glm(I(Num_S_TrainCamp>0) ~ targ_democratic * oppsize_norm + WarOnTerror + ColdWar + capdist + W_norm, family  = binomial(link = "logit"), data = autocracies_data)
 summary(h2_hurdle_partb)
 exp(coef(h2_hurdle_partb))
 
