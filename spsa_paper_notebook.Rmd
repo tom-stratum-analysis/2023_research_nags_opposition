@@ -9,31 +9,319 @@ editor_options:
 
 ## Data Load
 
+```{r echo=FALSE}
+
+library(here)
+
+autocracies_data <- read.csv(here("data","autocracies_data.csv"))
+
+autocracies_data$NAGs_Supported <- autocracies_data$NumNAG_S
+autocracies_data$NAGS_with_Training_Camps <- autocracies_data$Num_S_TrainCamp
+autocracies_data$opposition_size <- autocracies_data$oppsize_norm
+autocracies_data$W <- autocracies_data$W_norm
+autocracies_data$distance_between_capitals <- autocracies_data$capdist
+
+
+hurdle_count_n <- autocracies_data[which(autocracies_data$NumNAG_S > 0),]
+
+hurdle_count_t <- autocracies_data[which(autocracies_data$Num_S_TrainCamp >0),]
+
+
+
+```
+
 ## Summary Stats
 
+
+
+```{r echo=FALSE, comment = ""}
+
+#normalized measure of W based on Smith and Bueno de Mesquita 2022
+summary(autocracies_data$W)
+
+#normalized measure of opposition size
+summary(autocracies_data$opposition_size)
+
+
+#Number of NAGS with training camps hosted in supporting country
+summary(autocracies_data$NAGS_with_Training_Camps)
+
+#Number of NAGS actively supported
+summary(autocracies_data$NAGs_Supported)
+
+
+# ratio of opposition size measure to W measure (both normalized)
+# 
+cat("ratio of opposition size measure to W measure (both normalized)")
+summary(autocracies_data$opp_W_ratio)
+
+# ratio of support group size measure to W measure (both normalized)
+summary(autocracies_data$supp_W_ratio)
+
+# ratio of opposition group size measure to support group size measure to W measure (both normalized)
+summary(autocracies_data$opp_supp_ratio)
+
+# supporter is democratic (binary)
+summary(autocracies_data$supp_democratic)
+
+#target is democratic (binary)
+summary(autocracies_data$targ_democratic)
+
+
+
+
+```
+
 ## Summary Plots
+
+```{r echo=FALSE}
+
+hist(autocracies_data$NAGs_Supported, main = "Histogram of Number of groups \n actively supported \n autocracies only")
+
+hist(autocracies_data$NAGS_with_Training_Camps, main = "Histogram of Number of groups \n supported with training camps \n autocracies only")
+
+hist(autocracies_data$opposition_size, main = "Histogram of \n Opposition Size")
+
+hist(autocracies_data$W, main = "Histogram of \n Minimal Winning Coalition Size (W)")
+
+
+
+```
 
 ## Models
 
 - HW: Autocratic regimes with smaller W will be more likely to support NAGS, all else equal. 
 
+```{r echo=FALSE}
+library(MASS)
+library(pscl)
+library(VGAM)
+
+formulaw1 <- NAGs_Supported ~ W + WarOnTerror + ColdWar + distance_between_capitals  
+
+formulaw1b <- NAGS_with_Training_Camps ~ W + WarOnTerror + ColdWar + distance_between_capitals  
+
+
+# quasipoisson model using number of groups supported
+
+w1_numSq <- glm(formula = formulaw1, family  = quasipoisson(link = "log"), data = autocracies_data)
+summary(w1_numSq)
+exp(coef(w1_numSq))
+
+
+# Hurdle model
+
+w1_hurdle <- hurdle(formula = formulaw1, data = autocracies_data)
+summary(w1_hurdle)
+
+w1_hurdle_part <- glm(I(NAGs_Supported>0) ~ W + WarOnTerror + ColdWar + distance_between_capitals , family  = binomial(link = "logit"), data = autocracies_data)
+summary(w1_hurdle_part)
+exp(coef(w1_hurdle_part))
+
+
+
+w1_count_part <- vglm(formula = formulaw1, family  = pospoisson(), data = hurdle_count_n)
+summary(w1_count_part)
+
+
+
+#Model using number of groups with training camps in country
+#
+
+# quasipoisson model using number of groups supported
+
+w1_numSqb <- glm(formula = formulaw1b, family  = quasipoisson(link = "log"), data = autocracies_data)
+summary(w1_numSqb)
+exp(coef(w1_numSqb))
+
+
+# Hurdle model
+
+w1_hurdleb <- hurdle(formula = formulaw1b, data = autocracies_data)
+summary(w1_hurdleb)
+
+w1_hurdle_partb <- glm(I(NAGS_with_Training_Camps>0) ~ W + WarOnTerror + ColdWar + distance_between_capitals , family  = binomial(link = "logit"), data = autocracies_data)
+summary(w1_hurdle_partb)
+exp(coef(w1_hurdle_partb))
+
+w1_count_part <- vglm(formula = formulaw1, family  = pospoisson(), data = hurdle_count_n)
+summary(w1_count_part)
+
+cat("\n w1_hurdle - number supported \n")
+
+## Exponentiated coefficients
+expCoefw1 <- exp(coef((w1_hurdle)))
+expCoefw1 <- matrix(expCoefw1, ncol = 2)
+rownames(expCoefw1) <- names(coef(w1_hurdle_part))
+colnames(expCoefw1) <- c("Count_model","Zero_hurdle_model")
+expCoefw1
+
+cat("\n w1_hurdle - number with training camps \n")
+
+## Exponentiated coefficients
+expCoefw1b <- round(exp(coef((w1_hurdleb))), digits = 5)
+expCoefw1b <- matrix(expCoefw1b, ncol = 2)
+rownames(expCoefw1b) <- names(coef(w1_hurdle_partb))
+colnames(expCoefw1b) <- c("Count_model","Zero_hurdle_model")
+expCoefw1b
+
+# library(stargazer)
+# stargazer(w1_hurdle_part)
+# stargazer(w1_hurdle_partb)
+# 
+# stargazer(w1_numSq)
+# stargazer(w1_numSqb)
+
+```
+
+
 - H1: Autocratic regimes with large opposition groups will be more likely to support NAGS, all else equal. 
 
-                + H2a: Higher likelihood of supporting at least one NAG.
+                + H1a: Higher likelihood of supporting at least one NAG.
 
-                + H2b: Higher number of NAGS supported.
+                + H1b: Higher number of NAGS supported.
+                
+```{r echo=FALSE}
+
+formulah1 <- NAGs_Supported ~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals  + W
+
+
+# quasipoisson model using number of groups supported
+
+h1_q <- glm(formula = formulah1, family  = quasipoisson(link = "log"), data = autocracies_data)
+summary(h1_q)
+exp(coef(h1_q))
+
+
+# Hurdle model
+
+h1_hurdle <- hurdle(formula = formulah1, data = autocracies_data)
+summary(h1_hurdle)
+
+h1_hurdle_part <- glm(I(NAGs_Supported>0) ~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals  + W, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h1_hurdle_part)
+exp(coef(h1_hurdle_part))
+
+h1_count_part <- vglm(formula = formulah1, family  = pospoisson(), data = hurdle_count_n)
+summary(h1_count_part)
+
+
+cat("\n h1_hurdle - number supported \n")
+
+## Exponentiated coefficients
+expCoefh1 <- exp(coef((h1_hurdle)))
+expCoefh1 <- matrix(expCoefh1, ncol = 2)
+rownames(expCoefh1) <- names(coef(h1_hurdle_part))
+colnames(expCoefh1) <- c("Count_model","Zero_hurdle_model")
+expCoefh1
+
+# library(stargazer)
+# stargazer(h1_q)
+# stargazer(h1_hurdle)
+
+
+```
+
 
 - H2: Autocratic regimes with large opposition groups will be more likely to support NAGS by hosting training camps, all else equal. 
 
                 + H2a: Higher likelihood of supporting at least one NAG.
 
                 + H2b: Higher number of NAGS supported.
+                
+```{r echo=FALSE}
+
+
+
+#H2 - Models using number of groups with training camps in country
+#
+
+formulah2 <- NAGS_with_Training_Camps ~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported
+
+
+
+# quasipoisson model using number of groups supported
+
+h2_q <- glm(formula = formulah2, family  = quasipoisson(link = "log"), data = autocracies_data)
+summary(h2_q)
+exp(coef(h2_q))
+
+
+# Hurdle model
+
+h2_hurdle <- hurdle(formula = formulah2, data = autocracies_data)
+summary(h2_hurdle)
+
+h2_hurdle_part <- glm(I(NAGS_with_Training_Camps>0) ~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h2_hurdle_part)
+exp(coef(h2_hurdle_part))
+
+h2_count_part <- vglm(formula = formulah2, family  = pospoisson(), data = hurdle_count_t)
+summary(h2_count_part)
+
+
+
+cat("\n h2_hurdle - number with training camps \n")
+
+
+
+## Exponentiated coefficients
+expCoefh2 <- round(exp(coef((h2_hurdle))), digits = 5)
+expCoefh2 <- matrix(expCoefh2, ncol = 2)
+rownames(expCoefh2) <- names(coef(h2_hurdle_part))
+colnames(expCoefh2) <- c("Count_model","Zero_hurdle_model")
+expCoefh2
+
+
+# stargazer(h2_hurdle)
+
+# stargazer(h2_q)
+
+```
+
 
 - H3: Autocratic regimes with large opposition groups will be more likely to support NAGS that target democracies.\\
 
                 + H3a: Higher likelihood of supporting at least one NAG that targets a democracy.
 
                 + H3b: Number of NAGs that target a democracy supported will be higher. 
+                
+```{r echo=FALSE}
+
+formulah3 <- NAGs_Supported ~ targ_democratic * opposition_size + WarOnTerror + ColdWar + distance_between_capitals  + W
+
+# quasipoisson model using number of groups supported
+
+h3_q <- glm(formula = formulah3, family  = quasipoisson(link = "log"), data = autocracies_data)
+summary(h3_q)
+exp(coef(h3_q))
+
+# Hurdle model
+
+h3_hurdle <- hurdle(formula = formulah3, data = autocracies_data)
+summary(h3_hurdle)
+
+h3_hurdle_part <- glm(I(NAGs_Supported>0) ~ targ_democratic * opposition_size + WarOnTerror + ColdWar + distance_between_capitals  + W, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h3_hurdle_part)
+exp(coef(h3_hurdle_part))
+
+h3_count_part <- vglm(formula = formulah3, family  = pospoisson(), data = hurdle_count_n)
+summary(h3_count_part)
+
+
+## Exponentiated coefficients
+expCoefh3 <- exp(coef((h3_hurdle)))
+expCoefh3 <- matrix(expCoefh3, ncol = 2)
+rownames(expCoefh3) <- names(coef(h3_hurdle_part))
+colnames(expCoefh3) <- c("Count_model","Zero_hurdle_model")
+expCoefh3
+
+# stargazer(h3_hurdle)
+# stargazer(h3_q)
+
+
+```
+
 
 
 - H4: Autocratic regimes with large opposition groups will be more likely to support NAGS that target democracies by hosting training camps, all else equal. 
@@ -42,8 +330,113 @@ editor_options:
 
                 + H4b: Number of NAGs supported by hosting training camps will be higher. 
 
+```{r echo=FALSE}
 
+formulah4 <- NAGS_with_Training_Camps ~ targ_democratic * opposition_size + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported
+
+# quasipoisson model using number of groups supported
+
+h4_q <- glm(formula = formulah4, family  = quasipoisson(link = "log"), data = autocracies_data)
+summary(h4_q)
+exp(coef(h4_q))
+
+# Hurdle model
+
+h4_hurdle <- hurdle(formula = formulah4, data = autocracies_data)
+summary(h4_hurdle)
+
+h4_hurdle_part <- glm(I(NAGS_with_Training_Camps>0) ~ targ_democratic * opposition_size + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h4_hurdle_part)
+exp(coef(h4_hurdle_part))
+
+
+h4_count_part <- vglm(formula = formulah4, family  = pospoisson(), data = hurdle_count_t)
+summary(h4_count_part)
+
+
+cat("\n h2_hurdle - number with training camps \n")
+
+## Exponentiated coefficients
+expCoefh4 <- round(exp(coef((h4_hurdle))), digits = 5)
+expCoefh4 <- matrix(expCoefh4, ncol = 2)
+rownames(expCoefh4) <- names(coef(h4_hurdle_part))
+colnames(expCoefh4) <- c("Count_model","Zero_hurdle_model")
+expCoefh4
+
+# stargazer(h4_q)
+# stargazer(h4_hurdle)
+
+
+
+
+```
 
 ## Model plots
+
+```{r echo=FALSE}
+
+clog <- function(x) log(x + 0.5)
+
+cfac <- function(x, breaks = NULL) {
++ if(is.null(breaks)) breaks <- unique(quantile(x, 0:10/10))
++ x <- cut(x, breaks, include.lowest = TRUE, right = FALSE)
++ levels(x) <- paste(breaks[-length(breaks)], ifelse(diff(breaks) > 1,
++ c(paste("-", breaks[-c(1, length(breaks))] - 1, sep = ""), "+"), "")) + return(x)}
+
+```
+
+
+```{r echo=FALSE}
+
+
+library(ggplot2)
+
+ggplot(autocracies_data, aes(opposition_size,NAGs_Supported)) +
+        geom_count() +
+        geom_smooth()
+
+ggplot(autocracies_data, aes(opposition_size,NAGS_with_Training_Camps)) +
+        geom_count() +
+        geom_smooth()
+
+library(sjPlot)
+library(sjlabelled)
+library(sjmisc)
+theme_set(theme_sjplot())
+
+
+
+plot_model(h1_q, title = "H1: Count of groups supported")
+
+plot_model(h1_hurdle_part, title = "H1: Hurdle model \n Likelihood of greater than 1 group supported")
+
+
+
+plot_model(h2_q, title = "H2: Count of groups with training camps hosted")
+
+plot_model(h2_hurdle_part, title = "H2: Hurdle model \n Likelihood of greater than 1 group with training camp hosted")
+
+
+
+plot_model(h3_q, title = "H3: Count of groups supported")
+
+plot_model(h3_hurdle_part, title = "H3: Hurdle model \n Likelihood of greater than 1 group supported")
+
+
+
+plot_model(h4_q, title = "H4: Count of groups with training camps hosted")
+
+plot_model(h4_hurdle_part, title = "H4: Hurdle model \n Likelihood of greater than 1 group with training camp hosted")
+
+
+
+
+plot_model(h1_count_part, title = "H1: Hurdle model \n Truncated Poisson Count Above Hurdle")
+plot_model(h2_count_part, title = "H2: Hurdle model \n Truncated Poisson Count Above Hurdle")
+plot_model(h3_count_part, title = "H3: Hurdle model \n Truncated Poisson Count Above Hurdle")
+plot_model(h4_count_part, title = "H4: Hurdle model \n Truncated Poisson Count Above Hurdle")
+
+```
+
 
 ## Additional checks
