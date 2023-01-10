@@ -10,7 +10,8 @@ editor_options:
 ## Data Load
 
 ```{r echo=FALSE}
-
+options(scipen = 999)
+library(stargazer)
 library(here)
 
 autocracies_data <- read.csv(here("data","autocracies_data.csv"))
@@ -371,6 +372,24 @@ expCoefh4
 
 ```
 
+## Tables
+
+```{r echo=FALSE}
+
+stargazer(h1_q,h1_hurdle_part, type = "text")
+expCoefh1
+
+stargazer(h2_q,h2_hurdle_part, type = "text")
+expCoefh2
+
+stargazer(h3_q,h3_hurdle_part, type = "text")
+expCoefh3
+
+stargazer(h4_q,h4_hurdle_part, type = "text")
+expCoefh4
+```
+
+
 ## Model plots
 
 ```{r echo=FALSE}
@@ -438,5 +457,27 @@ plot_model(h4_count_part, title = "H4: Hurdle model \n Truncated Poisson Count A
 
 ```
 
+## Tables for LaTeX
+
+```{r echo=FALSE}
+
+stargazer(h1_q,h1_hurdle_part)
+expCoefh1
+
+stargazer(h2_q,h2_hurdle_part)
+expCoefh2
+
+stargazer(h3_q,h3_hurdle_part)
+expCoefh3
+
+stargazer(h4_q,h4_hurdle_part)
+expCoefh4
+
+stargazer(h1_q,h2_q,h3_q,h4_q)
+
+stargazer(h1_hurdle_part,h2_hurdle_part,h3_hurdle_part,h4_hurdle_part)
+
+
+```
 
 ## Additional checks

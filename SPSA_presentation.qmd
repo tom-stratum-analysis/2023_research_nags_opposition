@@ -1,25 +1,94 @@
 ---
-title: "The Threat of Autocracy Promotion: Non-state Armed Groups and Domestic Signaling"
-author: "Tom Hanna"
-format: revealjs
+title: The Threat of Autocracy Promotion
+subtitle: International Attacks on Democracy as Domestic Signaling
+author:
+   - Tom Hanna 
+   - University of Houston
+   - tlhanna@uh.edu
+format:
+  revealjs:
+    incremental: true   
+    slide-number: true
+    chalkboard: 
+      buttons: false
+    preview-links: auto
+    logo: images/uh_red.png
+    css: styles.css
+    footer: <https://tomhanna.me>
 editor: visual
 ---
 
-## Quarto
+## Russia & Iran
 
-Quarto enables you to weave together content and executable code into a finished presentation. To learn more about Quarto presentations see <https://quarto.org/docs/presentations/>.
+## Autocracy Promotion and Non-state Armed Groups
 
-## Bullets
+## Background
 
-When you click the **Render** button a document will be generated that includes:
++ Autocracy promotion proposed causes
 
--   Content authored with markdown
--   Output from executable code
+                + Strategic
+                + Democracy defense
+                + Messianic Autocrats
+                + Coincidence
+                
++ Domestic Politics
+                
+                + Signaling
+                + Ideological supporters
+                + Selectorates, coalitions, and institutional interests
 
-## Code
+## Theory
 
-When you click the **Render** button a presentation will be generated that includes both content and the output of embedded code. You can embed code like this:
+- W doesn't explain everything
+- Institutional support group interests don't explain everything
 
-```{r}
-1 + 1
-```
+- Opposition matters: Larger opposition threatens leader survival
+                
+- Repression is costly
+
+                + Physical costs
+                + Economic disruption
+                + Threat of backfire
+                
+- Signaling instead of repression
+
+## Signaling instead of repression
+
+- International action can send domestic signals
+
+                + Domestic audience costs
+                + Position taking in democracies
+
+- Support for non-state armed groups
+
+                + Signals willingness to use force
+                + Signals willingness to ignore international norms
+                
+- Targeting democracies
+
+                + Signals opposition to liberalization
+                
+## Support for non-state armed groups
+
+- Financial support
+- Logisitical support
+- Providing weapons
+- Hosting headquarters
+- Allowing recruitment
+- **Hosting training camps**
+
+## Training camps
+
+- Sends a clear, costly signal
+- Risky, diplomatic cost
+- Bold and conspicuous to citizens
+- Explicit recourse to violence
+
+
+## Research Design
+
+## Results
+
+## Conclusions
+
+## Extra slides
