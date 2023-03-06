@@ -293,6 +293,7 @@ full_data <- left_join(full_data,state_cap, by = c("SupNum_COW","year"))
 #create binary variable for autocracy (used later to create subsets)
 full_data$supp_autocratic <- ifelse(full_data$supporter_polity < -5,1,0)
 
+full_data$supp_autocratic2 <- ifelse(full_data$v2x_regime_amb < 4,1,0)
 
 
 
@@ -323,9 +324,14 @@ pts_autocracies <- pts_full_data[which(pts_full_data$supp_autocratic == 1),]
 
 autocracies_data <- full_data[which(full_data$supp_autocratic == 1),]
 
+autocracies_data_v <- full_data[which(full_data$supp_autocratic2 == 1),]
+
+
 write.csv(full_data, here("data","full_data.csv"))
 
 write.csv(autocracies_data, here("data","autocracies_data.csv"))
+
+write.csv(autocracies_data_v, here("data","autocracies_data_v.csv"))
 
 
 ```

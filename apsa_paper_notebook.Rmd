@@ -326,7 +326,7 @@ expCoefh3
 
 
 
-- H4: Autocratic regimes with large opposition groups will be more likely to support NAGS that target democracies by hosting training camps, all else equal. 
+- H4: Autocratic regimes with large opposition groups and democratizing civil society groups  will be more likely to support NAGS that target democracies by hosting training camps, all else equal. 
 
                 + H4a: Higher likelihood of supporting at least one NAG targeting democracies by hosting training camps.
 
@@ -334,7 +334,11 @@ expCoefh3
 
 ```{r echo=FALSE}
 
-formulah4 <- NAGS_with_Training_Camps ~ targ_democratic * v2csprtcpt + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported
+# v2csantimv CSO anti-system movement
+# 
+#  CSO anti-system movement character (C) (v2csanmvch) - 4 is democratic
+
+formulah4 <- NAGS_with_Training_Camps ~ targ_democratic * v2csanmvch_4  + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported
 
 # quasipoisson model using number of groups supported
 
@@ -347,7 +351,7 @@ exp(coef(h4_q))
 h4_hurdle <- hurdle(formula = formulah4, data = autocracies_data)
 summary(h4_hurdle)
 
-h4_hurdle_part <- glm(I(NAGS_with_Training_Camps>0) ~ targ_democratic * v2csprtcpt + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported, family  = binomial(link = "logit"), data = autocracies_data)
+h4_hurdle_part <- glm(I(NAGS_with_Training_Camps>0) ~ targ_democratic + v2csanmvch_4 + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported, family  = binomial(link = "logit"), data = autocracies_data)
 summary(h4_hurdle_part)
 exp(coef(h4_hurdle_part))
 
@@ -372,6 +376,22 @@ expCoefh4
 
 
 ```
+
+```{r}
+
+        
+h5_hurdle_part <- glm(I(NAGS_with_Training_Camps>0 & targ_democratic == 1) ~ opposition_size + v2csanmvch_4 + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h5_hurdle_part)
+exp(coef(h5_hurdle_part))
+
+h5_hurdle_partb <- glm(I(NAGS_with_Training_Camps>0 & targ_democratic == 1) ~ opposition_size * v2csanmvch_4 + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h5_hurdle_partb)
+exp(coef(h5_hurdle_partb))
+
+
+```
+
+
 
 ## Tables
 
@@ -460,6 +480,14 @@ plot_model(h4_count_part, title = "H4: Hurdle model \n Truncated Poisson Count A
 
 ```
 
+```{r}
+
+
+
+
+```
+
+
 ## Tables for LaTeX
 
 ```{r echo=FALSE}
@@ -482,5 +510,89 @@ plot_model(h4_count_part, title = "H4: Hurdle model \n Truncated Poisson Count A
 # 
 
 ```
+
+##IV regression
+
+### Stage I - Two Stage IV Regression
+
+```{r}
+
+stage_1a <- lm(opposition_size ~ v2csprtcpt, data = autocracies_data)
+summary(stage_1a)
+
+stage_1b  <- lm(opposition_size ~ v2cseeorgs, data = autocracies_data)
+summary(stage_1b)
+
+stage_1c <- lm(opposition_size ~ v2x_cspart, data = autocracies_data)
+summary(stage_1c)
+
+stage_1d <- lm(opposition_size ~ v2csantimv, data = autocracies_data)
+summary(stage_1d)
+
+stage_1e <- lm(opposition_size ~ v2csstruc_3, data = autocracies_data)
+summary(stage_1e)
+
+
+
+# do regressions for partial F-tests
+# first-stage:
+fs = lm(I(NAGS_with_Training_Camps>0 & targ_democratic == 1) ~ opposition_size + v2csprtcpt, data = autocracies_data)
+# null first-stage (i.e. exclude IVs):
+fn = lm(I(NAGS_with_Training_Camps>0 & targ_democratic == 1) ~ opposition_size, data = autocracies_data)
+
+anova(fs,fn)
+
+# simple F-test
+library(AER)
+waldtest(fs, fn)$F[2]
+# F-test robust to heteroskedasticity
+waldtest(fs, fn, vcov = vcovHC(fs, type="HC0"))$F[2]
+
+
+
+
+
+
+
+```
+
+### Two stage residual inclusion
+
+```{r}
+library(OneSampleMR)
+
+tsrilogitfit <- tsri(I(NAGS_with_Training_Camps>0) ~ opposition_size | v2x_cspart, data = autocracies_data, link = "logit")
+summary(tsrilogitfit)
+
+
+
+
+```
+
+
+
+## Democracy attacks - autocracy promotion
+
+use v2csanmvch
+
+```{r}
+
+# 3.10.0.8  CSO anti-system movement character (C) (v2csanmvch)Project Manager(s): Michael BernhardAdditional versions: *_nrQuestion: How would you characterize the anti-system movement(s) identified in the previousquestion?Clarification: Check all that apply.Responses:0: Works through legal channels, for the most part. (0=No, 1=Yes) [v2csanmvch_0]1: Participates in elections. (0=No, 1=Yes) [v2csanmvch_1]2: Works through a mix of legal and extra-legal channels. (0=No, 1=Yes) [v2csanmvch_2]3: Insurrectionary. (0=No, 1=Yes) [v2csanmvch_3]4: Democratic. Perceived by most disinterested observers as willing to play by the rules ofthe democratic game, willing to respect constitutional provisions or electoral outcomes, andwilling to relinquish power (under democratic auspices). (0=No, 1=Yes) [v2csanmvch_4]5: Anti-democratic.  Perceived by most disinterested observers as unwilling to play by therules of the democratic game, not willing to respect constitutional provisions or electoraloutcomes, and/or not willing to relinquish power (under democratic auspices).  (0=No,1=Yes) [v2csanmvch_5]6: Leftist, socialist, communist. (0=No, 1=Yes) [v2csanmvch_6]7: Rightist, conservative, party of order. (0=No, 1=Yes) [v2csanmvch_7]8: Ethnolinguistic, tribe, kinship, clan. (0=No, 1=Yes) [v2csanmvch_8]9: Separatist or autonomist. (0=No, 1=Yes) [v2csanmvch_9]10: Religious. (0=No, 1=Yes) [v2csanmvch_10]11: Paramilitary. (0=No, 1=Yes) [v2csanmvch_11]12: Heavily engaged in criminal activity,e.g., narcotics, bootlegging, illegal exploitation ofnatural resources, extortion, kidnapping. (0=No, 1=Yes) [v2csanmvch_12]
+
+```
+
+```{r}
+
+c <- length(autocracies_data$e_legparty)
+
+n <- sum(is.na(autocracies_data$e_legparty))
+
+answer <- n/c
+
+answer
+
+```
+
+
 
 ## Additional checks
