@@ -1,9 +1,9 @@
 ---
-title: "Support for non-state armed groups as domestic signaling in all nondemocracies"
+title: "Support for non-state armed groups as domestic signaling to opposition groups"
 output:
-  pdf_document: default
   html_document:
     df_print: paged
+  pdf_document: default
 editor_options:
   chunk_output_type: console
 ---
@@ -200,7 +200,7 @@ expCoefw1b
 ```
 
 
-H1: Autocratic regimes with larger opposition groups will be more likely to actively support NAGs, all else equal.
+H1: Autocratic regimes with larger opposition groups will be more likely to actively support at least one NAG, all else equal.
 
 ```{r}
 
@@ -323,8 +323,43 @@ msummary(m_list)
 
 modelplot(m_list)
 
+h1_lpm <- lm(at_least_1_NAG_supported ~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals+ W, data = autocracies_data)
+summary(h1_lpm)
+
+h1_iv <- ivreg(at_least_1_NAG_supported ~ WarOnTerror + ColdWar + distance_between_capitals + W | opposition_size | v2csgender, data = autocracies_data)
+
+summary(h1_iv)
+
+m_list1 <- list(OLS = h1_lpm, IV = h1_iv)
+msummary(m_list1)
+
+modelplot(m_list1)
+
+
+h2_lpm <- lm(at_least_1_Training_Camp ~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals  + W, data = autocracies_data)
+summary(h2_lpm)
+
+h2_iv <- ivreg(at_least_1_Training_Camp ~ WarOnTerror + ColdWar + distance_between_capitals  + W | opposition_size | v2csgender, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h2_iv)
+
+m_list2 <- list(OLS = h2_lpm, IV = h2_iv)
+msummary(m_list2)
+
+modelplot(m_list2)
+
+
+
+
 
 ```
 
+Cases
 
+
+```{r}
+
+cases <- autocracies_data[which(autocracies_data$at_least_1_Training_Camp == 1 & autocracies_data$oppsize_norm > .66979),]
+
+countercases <- autocracies_data[which(autocracies_data$at_least_1_Training_Camp == 1 & autocracies_data$oppsize_norm < .58),]
+```
 
