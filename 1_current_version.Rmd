@@ -1,9 +1,9 @@
 ---
 title: "Support for non-state armed groups as domestic signaling to opposition groups"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
-  pdf_document: default
 editor_options:
   chunk_output_type: console
 ---
@@ -287,41 +287,33 @@ exp(coef(h5_hurdle_part))
 
 ```
 
-Next steps: Instrumental variable using 2S IV Regression with a linear probability model
+Next steps: Instrumental variable using 2SLS Regression with a linear probability model
 
 Instrument is Civil Society Organization Women's Participation (v2csgender)
 
-While there is a strong theoretical link between the strength of civil society and the strength of opposition groups, which makes some measure of civil society an appropriate instrument it is necessary to find an appropriate measure of civil society. There are two issues here. First, many measures of civil society include an often heavy emphasis on the sorts of non-governmental organizations that are often the target or even creation of democracy promotion efforts by the West. Thus, these measures suffer the same endogeneity problem the instrumental variable treatment approach is intended to solve. Second, many measures of civil society such as institutional rules and structures of civil society organizations are one step removed from measuring the actual strength of civil society. Without developing a separate measure of civil society strength, which would be worthwhile but well beyond the scope of this analysis, the VDem data set offers a measure which more closely ties civil society to opposition -  women's participation in civil society.
+While there is a strong theoretical link between the strength of civil society and the strength of opposition groups, which makes some measure of civil society an appropriate instrument it is necessary to find an appropriate measure of civil society. There are two issues here. First, many measures of civil society include an often heavy emphasis on the sorts of non-governmental organizations that are often the target or even creation of democracy promotion efforts by the West. Thus, these measures suffer the same endogeneity problem the instrumental variable treatment approach is intended to solve. Second, many measures focusing on civil society organizations are one step removed from measuring the strength of civil society especially as related to opposition and instead measure the institutional characteristics of the regime. Developing a separate measure of civil society strength would be worthwhile but well beyond the scope of the current analysis. The VDem data set used here offers several measures which suffer the issues mentioned, but also offers one measure which closely ties civil society to opposition strength both theoretically and empirically  -  women's participation in civil society.
 
-It has been asserted that women's participation in civil society anti-system movements represent a tipping point to large scale opposition, mass protest, and even outright rebellion. 
-
-Dabiri, Arastoo. “‘Woman, Life, Freedom’: A Movement in Progress in Iran.” Dignity: A Journal of Analysis of Exploitation and Violence 8, no. 1 (2023): 5. https://doi.org/10.23860/dignity.2023.08.01.05
-
-Ms Constitution. “‘Woman, Life, Liberty’ in Iran and the Role of Academia.” Nature Human Behaviour 7, no. 1 (January 2023): 3–5. https://doi.org/10.1038/s41562-022-01504-6
-
-Henshaw, Alexis Leanna. “Where Women Rebel.” International Feminist Journal of Politics 18, no. 1 (January 2, 2016): 39–60. https://doi.org/10.1080/14616742.2015.1007729
+It has been asserted that women's participation in civil society anti-system movements represent a tipping point to large scale opposition, mass protest, and even outright rebellion.^[Henshaw, Alexis Leanna. “Where Women Rebel.” International Feminist Journal of Politics 18, no. 1 (January 2, 2016): 39–60. https://doi.org/10.1080/14616742.2015.1007729] This is seen particularly in the "Woman, Life, Freedom" slogan of the Iranian uprising of 2021-2022.^[Dabiri, Arastoo. “‘Woman, Life, Freedom’: A Movement in Progress in Iran.” Dignity: A Journal of Analysis of Exploitation and Violence 8, no. 1 (2023): 5. https://doi.org/10.23860/dignity.2023.08.01.05]^[Ms Constitution. “‘Woman, Life, Liberty’ in Iran and the Role of Academia.” Nature Human Behaviour 7, no. 1 (January 2023): 3–5. https://doi.org/10.1038/s41562-022-01504-6]
 
 
+
+
+
+
+
+For purposes of instrumental variable analysis, I use Two Stage Least Squares, offering a Linear Probability Model of the binary dependent variables.^[“Even with these problems, the linear probability model is useful
+and often applied in economics. It usually works well for values
+of the independent variables that are near the averages in the
+sample.” (p.209, Wooldridge, Jeffrey. Introductory Econometrics: A Modern Approach. 6th ed. Mason, OH: CENGAGE Learning Custom Publishing, 2015.] 
 
 
 ```{r}
 
-#h3as LPM
+cor(autocracies_data$opposition_size,autocracies_data$v2csgender, use = "pairwise.complete.obs")
 
-h3_lpm <- lm(Training_Camp_and_Democratic_Target ~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals + W, data = autocracies_data)
-summary(h3_lpm)
-
-library(ivreg)
-
-h3_iv <- ivreg(Training_Camp_and_Democratic_Target ~  WarOnTerror + ColdWar + distance_between_capitals + W | opposition_size | v2csgender, data = autocracies_data)
-
-summary(h3_iv)
 
 library("modelsummary")
-m_list <- list(OLS = h3_lpm, IV = h3_iv)
-msummary(m_list)
-
-modelplot(m_list)
+library(ivreg)
 
 h1_lpm <- lm(at_least_1_NAG_supported ~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals+ W, data = autocracies_data)
 summary(h1_lpm)
@@ -347,8 +339,20 @@ msummary(m_list2)
 
 modelplot(m_list2)
 
+#h3as LPM
+
+h3_lpm <- lm(Training_Camp_and_Democratic_Target ~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals + W, data = autocracies_data)
+summary(h3_lpm)
+
+h3_iv <- ivreg(Training_Camp_and_Democratic_Target ~  WarOnTerror + ColdWar + distance_between_capitals + W| opposition_size | v2csgender, data = autocracies_data)
+
+summary(h3_iv)
 
 
+m_list <- list(OLS = h3_lpm, IV = h3_iv)
+msummary(m_list)
+
+modelplot(m_list)
 
 
 ```
