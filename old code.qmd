@@ -1,0 +1,16 @@
+---
+title: "miscellaneous"
+format: html
+---
+
+## Old Code
+
+
+```{r}
+
+cases <- autocracies_data[which(autocracies_data$at_least_1_Training_Camp == 1 & autocracies_data$oppsize_norm > .66979),]
+
+countercases <- autocracies_data[which(autocracies_data$at_least_1_Training_Camp == 1 & autocracies_data$oppsize_norm < .58),]
+```
+
+````
