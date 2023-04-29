@@ -1,0 +1,33 @@
+---
+title: "miscellaneous"
+format: html
+---
+
+## Old Code
+
+
+```{r}
+
+cases <- autocracies_data[which(autocracies_data$at_least_1_Training_Camp == 1 & autocracies_data$oppsize_norm > .66979),]
+
+countercases <- autocracies_data[which(autocracies_data$at_least_1_Training_Camp == 1 & autocracies_data$oppsize_norm < .58),]
+
+```
+
+
+
+H5: Large anti-system civil society movements - v2csantimv - or pro-democracy civil society movements - v2csanmvch_4
+
+```{r}
+
+h5a <- glm(Training_Camp_and_Democratic_Target ~ v2csantimv + WarOnTerror + ColdWar + distance_between_capitals + W, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h5a)
+exp(coef(h5a))
+
+h5b <- glm(Training_Camp_and_Democratic_Target ~ v2csantimv + WarOnTerror + ColdWar + distance_between_capitals + W, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h5b)
+exp(coef(h5b))
+
+
+
+```

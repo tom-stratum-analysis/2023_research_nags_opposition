@@ -1,14 +1,14 @@
 ---
 title: "Support for non-state armed groups as domestic signaling to opposition groups"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
-  pdf_document: default
 editor_options:
   chunk_output_type: console
 ---
 
-##Data
+## Data
 
 This work includes data for all nondemocracies, defined as a Regimes of the World with ambiguous cases (v2x_regime_amb) < 4, Electoral autocracies and below^[Coppedge, Michael, John Gerring, Carl Henrik Knutsen, Staffan I. Lindberg, Jan Teorell, Nazifa Alizada, David Altman, Michael Bernhard, Agnes Cornell, M. Steven Fish, Lisa Gastaldi, Haakon Gjerløw, Adam Glynn, Sandra Grahn, Allen Hicken, Garry Hindle, Nina Ilchenko, Katrin Kinzelbach, Joshua Krusell, Kyle L. Marquardt, Kelly McMann, Valeriya Mechkova, Juraj Medzihorsky, Pamela Paxton, Daniel Pemstein, Josefine Pernes, Oskar Ryden, Johannes von Romer, Brigitte Seim, Rachel Sigman, Svend-Erik Skaaning, Jeffrey Staton, Aksel Sundstrom, Eitan Tzelgov, Yi-ting Wang, Tore Wig, Steven Wilson and Daniel Ziblatt. 2022. "V-Dem [Country-Year/Country-Date] Dataset v12" Varieties of Democracy (V-Dem) Project. https://doi.org/10.23696/vdemds22]. 
 
@@ -42,7 +42,7 @@ autocracies_data$Training_Camp_and_Democratic_Target <- ifelse((autocracies_data
 
 ```
 
-
+##Summary Statistics
 
 
 ```{r comment = ""}
@@ -83,31 +83,49 @@ summary(autocracies_data$targ_democratic)
 ## Summary Plots
 
 ```{r echo=FALSE}
+#| label: fig-1
+#| layout-ncol: 1
 
 hist(autocracies_data$NAGs_Supported, main = "Histogram of Number of groups \n actively supported \n autocracies only")
 
+```
+
+
+```{r echo=FALSE}
 hist(autocracies_data$NAGS_with_Training_Camps, main = "Histogram of Number of groups \n supported with training camps \n autocracies only")
+```
 
+
+```{r echo=FALSE}
 hist(autocracies_data$at_least_1_NAG_supported, main = "Histogram of \n at least one NAG supported \n autocracies only")
+```
 
+
+```{r echo=FALSE}
 hist(autocracies_data$at_least_1_Training_Camp, main = "Histogram of \n at least one Training Camp hosted \n autocracies only")
+```
 
+
+```{r echo=FALSE}
 hist(autocracies_data$Training_Camp_and_Democratic_Target, main = "Histogram of \n at least one Training Camp hosted \n for group with democratic target \n autocracies only")
+```
 
 
-
-
-
-
+```{r echo=FALSE}
 hist(autocracies_data$opposition_size, main = "Histogram of \n Opposition Size")
+```
 
+
+```{r echo=FALSE}
 hist(autocracies_data$W, main = "Histogram of \n Minimal Winning Coalition Size (W)")
 
 
 
 ```
 
-Models:
+## Models
+
+### Minimal Winning Coalitions and Ideology - prior concepts
 
 I start with some test code examining the effect of minimal winning coalitions^[Bueno de Mesquita, Bruce, and Alastair Smith. “A New Indicator of Coalition Size: Tests against Standard Regime‐type Indicators.” Social Science Quarterly, March 25, 2022. https://doi.org/10.1111/ssqu.13123] and regime ideology^[The main explanatory variable in my previous work.] Smaller W predicts greater use of private payoffs to maintain W. I argued that ideological payoffs substitute for private payoffs.
 
@@ -201,6 +219,7 @@ expCoefw1b
 
 ```
 
+## Opposition groups and support for NAGs
 
 H1: Autocratic regimes with larger opposition groups will be more likely to actively support at least one NAG, all else equal.
 
@@ -217,7 +236,7 @@ exp(coef(h1a))
 
 
 ```
-
+## Opposition groups and hosted NAG training camps
 
 H2: Autocratic regimes with larger opposition groups will be more likely to actively support NAGs by hosting training camps, all else equal. 
 
@@ -240,7 +259,7 @@ exp(coef(h2b))
 
 
 ```
-
+## Opposition groups and democracy targeting NAGs
 
 H3: Autocratic regimes with larger opposition groups will be more likely to actively support NAGS that target democracies by hosting training camps, all else equal. 
 
@@ -256,7 +275,7 @@ summary(h3b)
 exp(coef(h3b))
 
 ```
-
+## Other ideas - pro-democracy movements 
 
 H4: Autocratic regimes with larger opposition groups and pro-democracy civil society movements will be more likely to actively support NAGS that target democracies by hosting training camps, all else equal. 
 
@@ -273,35 +292,19 @@ exp(coef(h4b))
 
 ```
 
-H5: Large anti-system civil society movements - v2csantimv - or pro-democracy civil society movements - v2csanmvch_4
+## Next steps: Instrumental variable using 2SLS Regression with a linear probability model
 
-```{r}
-
-h5a <- glm(Training_Camp_and_Democratic_Target ~ v2csantimv + WarOnTerror + ColdWar + distance_between_capitals + W, family  = binomial(link = "logit"), data = autocracies_data)
-summary(h5a)
-exp(coef(h5a))
-
-h5b <- glm(Training_Camp_and_Democratic_Target ~ v2csantimv + WarOnTerror + ColdWar + distance_between_capitals + W, family  = binomial(link = "logit"), data = autocracies_data)
-summary(h5b)
-exp(coef(h5b))
+An obvious concern is that supporting non-state armed groups, especially those targeting democracies, may create an incentive for international actors to support regime change in the state. Specifically, the United States and European democracies have active programs of democracy promotion, which may include both overt support for opposition and efforts that indirectly encourage opposition in the state. To account for this, I use an instrumental variable approach to isolate the exogenous effect of opposition size on support for Non-state Armed Groups. 
 
 
-
-```
-
-Next steps: Instrumental variable using 2SLS Regression with a linear probability model
-
-Instrument is Civil Society Organization Women's Participation (v2csgender)
+### Instrument is Civil Society Organization Women's Participation (v2csgender)
 
 While there is a strong theoretical link between the strength of civil society and the strength of opposition groups, which makes some measure of civil society an appropriate instrument it is necessary to find an appropriate measure of civil society. There are two issues here. First, many measures of civil society include an often heavy emphasis on the sorts of non-governmental organizations that are often the target or even creation of democracy promotion efforts by the West. Thus, these measures suffer the same endogeneity problem the instrumental variable treatment approach is intended to solve. Second, many measures focusing on civil society organizations are one step removed from measuring the strength of civil society especially as related to opposition and instead measure the institutional characteristics of the regime. Developing a separate measure of civil society strength would be worthwhile but well beyond the scope of the current analysis. The VDem data set used here offers several measures which suffer the issues mentioned, but also offers one measure which closely ties civil society to opposition strength both theoretically and empirically  -  women's participation in civil society.
 
 It has been asserted that women's participation in civil society anti-system movements represent a tipping point to large scale opposition, mass protest, and even outright rebellion.^[Henshaw, Alexis Leanna. “Where Women Rebel.” International Feminist Journal of Politics 18, no. 1 (January 2, 2016): 39–60. https://doi.org/10.1080/14616742.2015.1007729] This is seen particularly in the "Woman, Life, Freedom" slogan of the Iranian uprising of 2021-2022.^[Dabiri, Arastoo. “‘Woman, Life, Freedom’: A Movement in Progress in Iran.” Dignity: A Journal of Analysis of Exploitation and Violence 8, no. 1 (2023): 5. https://doi.org/10.23860/dignity.2023.08.01.05]^[Ms Constitution. “‘Woman, Life, Liberty’ in Iran and the Role of Academia.” Nature Human Behaviour 7, no. 1 (January 2023): 3–5. https://doi.org/10.1038/s41562-022-01504-6]
 
 
-
-
-
-
+### Linear Probability Model instead of Generalized Linear Model
 
 For purposes of instrumental variable analysis, I use Two Stage Least Squares, offering a Linear Probability Model of the binary dependent variables.^[“Even with these problems, the linear probability model is useful
 and often applied in economics. It usually works well for values
@@ -310,6 +313,7 @@ sample.” (p.209, Wooldridge, Jeffrey. Introductory Econometrics: A Modern Appr
 
 
 ```{r}
+
 
 cor(autocracies_data$opposition_size,autocracies_data$v2csgender, use = "pairwise.complete.obs")
 
