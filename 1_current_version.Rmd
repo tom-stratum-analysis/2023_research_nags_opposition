@@ -69,7 +69,7 @@ summary(autocracies_data$opp_W_ratio)
 # ratio of support group size measure to W measure (both normalized)
 summary(autocracies_data$supp_W_ratio)
 
-# ratio of opposition group size measure to support group size measure to W measure (both normalized)
+# ratio of opposition group size measure to support group size measure  (both normalized)
 summary(autocracies_data$opp_supp_ratio)
 
 # supporter is democratic (binary)
@@ -225,6 +225,10 @@ H1: Autocratic regimes with larger opposition groups will be more likely to acti
 
 ```{r}
 
+autocracies_data2 <- autocracies_data[!is.na(autocracies_data$opp_W_ratio),]
+autocracies_data2 <- autocracies_data2[!is.infinite(autocracies_data2$opp_W_ratio),]
+
+
 formulah1 <- NAGs_Supported ~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals  + W
 
 
@@ -233,6 +237,9 @@ summary(h1a)
 exp(coef(h1a))
 
 
+h1ra <- glm(at_least_1_NAG_supported ~ opp_W_ratio + WarOnTerror + ColdWar + distance_between_capitals+ W, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h1ra)
+exp(coef(h1ra))
 
 
 ```
@@ -243,12 +250,10 @@ H2: Autocratic regimes with larger opposition groups will be more likely to acti
 
 ```{r}
 
-
-
 formulah2 <- NAGS_with_Training_Camps ~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported
 
 
-h2a <- glm(at_least_1_Training_Camp~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported, family  = binomial(link = "logit"), data = autocracies_data)
+h2a <- glm(at_least_1_Training_Camp~ opposition_size + v2exl_legitideolcr_4  + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported, family  = binomial(link = "logit"), data = autocracies_data)
 summary(h2a)
 exp(coef(h2a))
 
@@ -256,7 +261,13 @@ h2b <- glm(at_least_1_Training_Camp ~ opposition_size + WarOnTerror + ColdWar + 
 summary(h2b)
 exp(coef(h2b))
 
+h2ra <- glm(at_least_1_Training_Camp~ opp_W_ratio + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h2ra)
+exp(coef(h2ra))
 
+h2rb <- glm(at_least_1_Training_Camp ~ opp_W_ratio + WarOnTerror + ColdWar + distance_between_capitals  + W, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h2rb)
+exp(coef(h2rb))
 
 ```
 ## Opposition groups and democracy targeting NAGs
@@ -291,6 +302,22 @@ exp(coef(h4b))
 
 
 ```
+
+Ratio of opposition to support group size
+
+```{r}
+
+h3r <- glm(Training_Camp_and_Democratic_Target ~ opp_W_ratio + WarOnTerror + ColdWar + distance_between_capitals  + W, family  = binomial(link = "logit"), data = autocracies_data2,)
+summary(h3r)
+exp(coef(h3r))
+
+h3rb <- glm(Training_Camp_and_Democratic_Target ~ opp_W_ratio + WarOnTerror + ColdWar + distance_between_capitals  + W + at_least_1_Training_Camp, family  = binomial(link = "logit"), data = autocracies_data2)
+summary(h3rb)
+exp(coef(h3rb))
+
+```
+
+
 
 ## Next steps: Instrumental variable using 2SLS Regression with a linear probability model
 
