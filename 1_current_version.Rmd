@@ -26,6 +26,7 @@ autocracies_data$NAGS_with_Training_Camps <- autocracies_data$Num_S_TrainCamp
 autocracies_data$opposition_size <- autocracies_data$oppsize_norm
 autocracies_data$W <- autocracies_data$W_norm
 autocracies_data$distance_between_capitals <- autocracies_data$capdist
+autocracies_data$democratizing_civil_society_movement <- autocracies_data$v2csanmvch_4
 
 
 hurdle_count_n <- autocracies_data[which(autocracies_data$NumNAG_S > 0),]
@@ -253,11 +254,22 @@ H2: Autocratic regimes with larger opposition groups will be more likely to acti
 formulah2 <- NAGS_with_Training_Camps ~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported
 
 
-h2a <- glm(at_least_1_Training_Camp~ opposition_size + v2exl_legitideolcr_4  + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported, family  = binomial(link = "logit"), data = autocracies_data)
-summary(h2a)
-exp(coef(h2a))
+h2i <- glm(at_least_1_Training_Camp~ opposition_size + v2exl_legitideolcr_4  + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h2i)
+exp(coef(h2i))
 
-h2b <- glm(at_least_1_Training_Camp ~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals  + W, family  = binomial(link = "logit"), data = autocracies_data)
+
+
+h2ii <- glm(at_least_1_Training_Camp~ opposition_size * v2exl_legitideolcr_4  + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h2ii)
+exp(coef(h2ii))
+
+
+h2t <- glm(at_least_1_Training_Camp~ opposition_size + v2regsupgroups_7  + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h2t)
+exp(coef(h2t))
+
+h2b <- glm(at_least_1_Training_Camp ~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported, family  = binomial(link = "logit"), data = autocracies_data)
 summary(h2b)
 exp(coef(h2b))
 
@@ -268,6 +280,24 @@ exp(coef(h2ra))
 h2rb <- glm(at_least_1_Training_Camp ~ opp_W_ratio + WarOnTerror + ColdWar + distance_between_capitals  + W, family  = binomial(link = "logit"), data = autocracies_data)
 summary(h2rb)
 exp(coef(h2rb))
+
+
+h2ik <- glm(at_least_1_Training_Camp ~ opposition_size + v2exl_legitideolcr_4 + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported + supporter_cinc + capacity + v2exl_legitideolcr_4, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h2ik)
+exp(coef(h2ik))
+
+h2io <- glm(at_least_1_Training_Camp ~ opposition_size + v2exl_legitideolcr_4 + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported + e_total_oil_income_pc + capacity, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h2io)
+exp(coef(h2io))
+
+library(car)
+vif(h2b)
+vif(h2bk)
+
+# autocracies_data$supporter_cinc
+# autocracies_data$e_gdppc
+# autocracies_data$capacity
+# autocracies_data$e_total_oil_income_pc
 
 ```
 ## Opposition groups and democracy targeting NAGs
@@ -281,24 +311,30 @@ h3a <- glm(Training_Camp_and_Democratic_Target ~ opposition_size + WarOnTerror +
 summary(h3a)
 exp(coef(h3a))
 
-h3b <- glm(Training_Camp_and_Democratic_Target ~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals  + W + at_least_1_Training_Camp, family  = binomial(link = "logit"), data = autocracies_data)
+h3b <- glm(Training_Camp_and_Democratic_Target ~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGS_with_Training_Camps, family  = binomial(link = "logit"), data = autocracies_data)
 summary(h3b)
 exp(coef(h3b))
 
 ```
+
+
 ## Other ideas - pro-democracy movements 
 
-H4: Autocratic regimes with larger opposition groups and pro-democracy civil society movements will be more likely to actively support NAGS that target democracies by hosting training camps, all else equal. 
+H4: Autocratic regimes with stronger pro-democracy civil society movements will be more likely to actively support NAGS that target democracies by hosting training camps, all else equal. 
 
 ```{r}
-h4a <- glm(Training_Camp_and_Democratic_Target ~ opposition_size *  v2csanmvch_4 + WarOnTerror + ColdWar + distance_between_capitals + W, family  = binomial(link = "logit"), data = autocracies_data)
+h4a <- glm(Training_Camp_and_Democratic_Target ~  democratizing_civil_society_movement + WarOnTerror + ColdWar + distance_between_capitals + W, family  = binomial(link = "logit"), data = autocracies_data)
 summary(h4a)
 exp(coef(h4a))
 
 
-h4b <- glm(Training_Camp_and_Democratic_Target ~ opposition_size *  v2csanmvch_4 + WarOnTerror + ColdWar + distance_between_capitals + W + at_least_1_Training_Camp, family  = binomial(link = "logit"), data = autocracies_data)
+h4b <- glm(Training_Camp_and_Democratic_Target ~  democratizing_civil_society_movement + WarOnTerror + ColdWar + distance_between_capitals + W + NAGS_with_Training_Camps, family  = binomial(link = "logit"), data = autocracies_data)
 summary(h4b)
 exp(coef(h4b))
+
+h4c <- glm(Training_Camp_and_Democratic_Target ~  (democratizing_civil_society_movement + distance_between_capitals + W + NAGS_with_Training_Camps)*WarOnTerror *ColdWar, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h4c)
+exp(coef(h4c))
 
 
 ```
@@ -311,7 +347,7 @@ h3r <- glm(Training_Camp_and_Democratic_Target ~ opp_W_ratio + WarOnTerror + Col
 summary(h3r)
 exp(coef(h3r))
 
-h3rb <- glm(Training_Camp_and_Democratic_Target ~ opp_W_ratio + WarOnTerror + ColdWar + distance_between_capitals  + W + at_least_1_Training_Camp, family  = binomial(link = "logit"), data = autocracies_data2)
+h3rb <- glm(Training_Camp_and_Democratic_Target ~ opp_W_ratio + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGS_with_Training_Camps, family  = binomial(link = "logit"), data = autocracies_data2)
 summary(h3rb)
 exp(coef(h3rb))
 
@@ -333,9 +369,7 @@ It has been asserted that women's participation in civil society anti-system mov
 
 ### Linear Probability Model instead of Generalized Linear Model
 
-For purposes of instrumental variable analysis, I use Two Stage Least Squares, offering a Linear Probability Model of the binary dependent variables.^[“Even with these problems, the linear probability model is useful
-and often applied in economics. It usually works well for values
-of the independent variables that are near the averages in the
+For purposes of instrumental variable analysis, I use Two Stage Least Squares, offering a Linear Probability Model of the binary dependent variables.^[“Even with these problems, the linear probability model is useful and often applied in economics. It usually works well for values of the independent variables that are near the averages in the
 sample.” (p.209, Wooldridge, Jeffrey. Introductory Econometrics: A Modern Approach. 6th ed. Mason, OH: CENGAGE Learning Custom Publishing, 2015.] 
 
 
@@ -344,6 +378,9 @@ sample.” (p.209, Wooldridge, Jeffrey. Introductory Econometrics: A Modern Appr
 
 cor(autocracies_data$opposition_size,autocracies_data$v2csgender, use = "pairwise.complete.obs")
 
+
+
+cor(autocracies_data$opposition_size,autocracies_data$v2csantimv, use = "pairwise.complete.obs")
 
 library("modelsummary")
 library(ivreg)
@@ -366,12 +403,18 @@ modelplot(m_list1)
 
 #H2 as Linear Probability Model
 
-h2_lpm <- lm(at_least_1_Training_Camp ~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals  + W, data = autocracies_data)
+h2_lpm <- lm(at_least_1_Training_Camp ~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported, data = autocracies_data)
 summary(h2_lpm)
+
+h2i_lpm <- lm(at_least_1_Training_Camp ~ opposition_size + v2exl_legitideolcr_4 + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported, data = autocracies_data)
+summary(h2i_lpm)
 
 #H2 as 2SLS Instrumental Variable Model
 
-h2_iv <- ivreg(at_least_1_Training_Camp ~ WarOnTerror + ColdWar + distance_between_capitals  + W | opposition_size | v2csgender, family  = binomial(link = "logit"), data = autocracies_data)
+h2_iv <- ivreg(at_least_1_Training_Camp ~ WarOnTerror + ColdWar + distance_between_capitals + W + NAGs_Supported | opposition_size |v2csgender, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h2_iv)
+
+h2i_iv <- ivreg(at_least_1_Training_Camp ~ v2exl_legitideolcr_4 + WarOnTerror + ColdWar + distance_between_capitals + W  + NAGs_Supported | opposition_size |v2csgender, family  = binomial(link = "logit"), data = autocracies_data)
 summary(h2_iv)
 
 m_list2 <- list(OLS = h2_lpm, IV = h2_iv)
@@ -379,22 +422,140 @@ msummary(m_list2)
 
 modelplot(m_list2)
 
+m_list2i <- list(OLS = h2i_lpm, IV = h2i_iv)
+msummary(m_list2i)
+
+modelplot(m_list2i)
+
 #h3as LPM
 
-h3_lpm <- lm(Training_Camp_and_Democratic_Target ~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals + W, data = autocracies_data)
+h3_lpm <- lm(Training_Camp_and_Democratic_Target ~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals + W + NAGS_with_Training_Camps, data = autocracies_data)
 summary(h3_lpm)
 
 #H3 as 2SLS IV Regression
 
-h3_iv <- ivreg(Training_Camp_and_Democratic_Target ~  WarOnTerror + ColdWar + distance_between_capitals + W| opposition_size | v2csgender, data = autocracies_data)
+h3_iv <- ivreg(Training_Camp_and_Democratic_Target ~  WarOnTerror + ColdWar + distance_between_capitals + W + NAGS_with_Training_Camps| opposition_size | v2csgender, data = autocracies_data)
 
 summary(h3_iv)
 
 
-m_list <- list(OLS = h3_lpm, IV = h3_iv)
-msummary(m_list)
+m_list3 <- list(OLS = h3_lpm, IV = h3_iv)
+msummary(m_list3)
 
-modelplot(m_list)
+modelplot(m_list3)
+
 
 
 ```
+
+```{r}
+
+library(stargazer)
+
+stargazer(h1a,h2b,h2i)
+
+stargazer(h3a,h3b,h4a,h4b)
+
+library(coefplot)
+coefplot(h1a)
+summary(h2b)
+coefplot(h2b)
+coefplot(h2i)
+
+stargazer(h1_lpm,h2_lpm,h3_lpm)
+
+msummary(m_list1)
+modelplot(m_list1)
+
+msummary(m_list2)
+modelplot(m_list2)
+
+msummary(m_list3)
+modelplot(m_list3)
+
+modelplot(h1a)
+
+library(coefplot)
+coefplot(h1a)
+
+library(sjPlot)
+library(ggplot2)
+
+plot_model(h2b,type = "pred", terms = "opposition_size")
+
+plot_model(h2i,type = "pred", terms = c("opposition_size","v2exl_legitideolcr_4"))
+
+plot_model(h2ii,type = "int", terms = c("opposition_size","v2exl_legitideolcr_4"))
+
+
+plot_model(h2b,type = "pred", terms = c("opposition_size","ColdWar"))
+
+coefplot(h3b)
+
+plot_model(h3b,type = "pred", terms = c("opposition_size","NAGS_with_Training_Camps"))
+
+coefplot(h4b)
+
+plot_model(h4b,type = "pred", terms = c("democratizing_civil_society_movement","NAGS_with_Training_Camps"))
+
+
+plot_model(h2b,type = "pred", terms = c("opposition_size","WarOnTerror"))
+
+
+plot_model(h2b,type = "pred", terms = c("opposition_size","W"))
+
+plot_model(h2b,type = "pred", terms = c("opposition_size","NAGs_Supported"))
+
+```
+
+```{r}
+
+
+
+plot_model(h2i,type = "pred", terms = c("v2exl_legitideolcr_4","ColdWar"))
+
+plot_model(h2i,type = "pred", terms = c("v2exl_legitideolcr_4","WarOnTerror"))
+
+
+plot_model(h2i,type = "pred", terms = c("v2exl_legitideolcr_4","W"))
+
+plot_model(h2i,type = "pred", terms = c("v2exl_legitideolcr_4","NAGs_Supported"))
+
+
+
+```
+
+```{r}
+
+iran <- autocracies_data[which(autocracies_data$Supporter == "Iran" & autocracies_data$Year > 1980),]
+summary(iran$opposition_size)
+summary(autocracies_data$opposition_size)
+
+
+```
+# Models with additional controls
+
+```{r}
+
+h2k <- glm(at_least_1_Training_Camp ~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported + supporter_cinc + capacity + v2exl_legitideolcr_4, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h2k)
+
+
+h2o <- glm(at_least_1_Training_Camp ~ opposition_size + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported + e_total_oil_income_pc + capacity, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h2o)
+
+
+
+
+h2ik <- glm(at_least_1_Training_Camp ~ opposition_size + v2exl_legitideolcr_4 + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported + supporter_cinc + capacity + v2exl_legitideolcr_4, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h2ik)
+
+
+h2io <- glm(at_least_1_Training_Camp ~ opposition_size + v2exl_legitideolcr_4 + WarOnTerror + ColdWar + distance_between_capitals  + W + NAGs_Supported + e_total_oil_income_pc + capacity, family  = binomial(link = "logit"), data = autocracies_data)
+summary(h2io)
+
+stargazer(h2k,h2o,h2ik,h2io)
+
+```
+
+
