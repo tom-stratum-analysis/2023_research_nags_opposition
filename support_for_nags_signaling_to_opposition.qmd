@@ -1,0 +1,297 @@
+---
+title: "Support for non-state armed groups as domestic signaling to opposition groups"
+author: "Tom Hanna"
+format:
+        html:
+                self-contained: true
+                code-fold: true
+                code-summary: "Show the code"
+                theme: vapor
+---
+
+## Data
+
+This work includes data for all nondemocracies, defined as a Regimes of the World with ambiguous cases (v2x_regime_amb) < 4, Electoral autocracies and below^[Coppedge, Michael, John Gerring, Carl Henrik Knutsen, Staffan I. Lindberg, Jan Teorell, Nazifa Alizada, David Altman, Michael Bernhard, Agnes Cornell, M. Steven Fish, Lisa Gastaldi, Haakon Gjerløw, Adam Glynn, Sandra Grahn, Allen Hicken, Garry Hindle, Nina Ilchenko, Katrin Kinzelbach, Joshua Krusell, Kyle L. Marquardt, Kelly McMann, Valeriya Mechkova, Juraj Medzihorsky, Pamela Paxton, Daniel Pemstein, Josefine Pernes, Oskar Ryden, Johannes von Romer, Brigitte Seim, Rachel Sigman, Svend-Erik Skaaning, Jeffrey Staton, Aksel Sundstrom, Eitan Tzelgov, Yi-ting Wang, Tore Wig, Steven Wilson and Daniel Ziblatt. 2022. "V-Dem [Country-Year/Country-Date] Dataset v12" Varieties of Democracy (V-Dem) Project. https://doi.org/10.23696/vdemds22]. 
+
+## Data Load
+
+```{r warning=FALSE, message=FALSE}
+options(scipen = 999)
+# library(stargazer)
+library(here)
+
+autocracies_data <- read.csv(here("data","autocracies_data_v.csv"))
+```
+
+### Name independent and control variables
+
+
+```{r warning=FALSE, message=FALSE}
+
+# Opposition Size 
+autocracies_data$Opposition_Size <- autocracies_data$oppsize_norm
+
+# Minimal Winning Coalition (Selectorate measure)
+# normalized measure of W based on Smith and Bueno de Mesquita 2022
+autocracies_data$Minimal_Winning_Coalition <- autocracies_data$W_norm
+
+# Distance between supporter and target capitals
+autocracies_data$Distance_Between_Capitals <- autocracies_data$capdist
+
+# Strength of Democratizing Civil Society Movement
+autocracies_data$Democratizing_Civil_Society_Movement <- autocracies_data$v2csanmvch_4
+
+# Supporter CINC
+autocracies_data$Supporter_CINC <- autocracies_data$supporter_cinc
+
+# Target CINC
+autocracies_data$Target_CINC <- autocracies_data$target_cinc
+
+# Supporter State Capacity
+autocracies_data$Supporter_State_Capacity <- autocracies_data$capacity
+
+# Cold War
+autocracies_data$Cold_War <- autocracies_data$ColdWar
+
+# War on Terror
+autocracies_data$War_on_Terror <- autocracies_data$WarOnTerror
+
+# Oil income
+autocracies_data$Supporter_Oil_Income <- autocracies_data$e_total_oil_income_pc
+
+# Religious Regime Ideoloyg
+autocracies_data$Religious_Regime_Ideology <- autocracies_data$v2exl_legitideolcr_4 
+
+
+```
+
+
+### Measures of support: Dependent Variables
+
+```{r warning=FALSE, message=FALSE}
+
+# Number of NAGs supported
+autocracies_data$NAGs_Supported <- autocracies_data$NumNAG_S
+
+# Number of NAGs with training camps
+autocracies_data$NAGS_with_Training_Camps <- autocracies_data$Num_S_TrainCamp
+
+
+# Does the state support at least one NAG targeting another state?
+autocracies_data$At_Least_1_NAG_Supported <- ifelse(autocracies_data$NAGs_Supported > 0,1,0)
+
+# Does the state provide Other support to at least one NAG targeting another state?
+autocracies_data$At_Least_1_Other_Support <- ifelse(autocracies_data$Num_S_Other > 0,1,0)
+
+# Does the state provide Transport support to at least one NAG targeting another state?
+autocracies_data$At_Least_1_Transport_Support <- ifelse(autocracies_data$Num_S_Transport > 0,1,0)
+
+# Does the state provide Training support to at least one NAG targeting another state?
+autocracies_data$At_Least_1_Training_Support <- ifelse(autocracies_data$Num_S_Training > 0,1,0)
+
+# Does the state host at least one training camp for a NAG targeting another state?
+autocracies_data$At_Least_1_Training_Camp <- ifelse(autocracies_data$NAGS_with_Training_Camps>0,1,0)
+
+# Does the state provide Training support other than hosting a training camp for at least one NAGE targeting another state?
+autocracies_data$At_Least_1_Training_Support_NonDomestic <- ifelse(autocracies_data$Num_S_Training > 0 & autocracies_data$NAGS_with_Training_Camps == 0,1,0)
+
+# Does the state provide Weapons and Logistics Support for at least one NAG targeting another state?
+autocracies_data$At_Least_1_Weapons_and_Logistics_Support <- ifelse(autocracies_data$Num_S_WeaponLog > 0,1,0)
+
+
+# Does the state provide Financial Assistance for at least one NAG targeting another state?
+autocracies_data$At_Least_1_Financial_Support <- ifelse(autocracies_data$Num_S_FinAid > 0,1,0)
+
+# Does the state provide troops for at least one NAG targeting another state?
+autocracies_data$At_Least_1_Troop_Support <- ifelse(autocracies_data$Num_S_Troop > 0,1,0)
+
+# Does the state host offices for propaganda or recruitment for at least one NAG targeting another state?
+autocracies_data$At_Least_1_Office <- ifelse(autocracies_data$Num_S_HeadQuar > 0,1,0)
+
+# Does the state provide a Safe Haven for Leaders for at least one NAG targeting another state?
+autocracies_data$At_Least_1_Safe_Haven_Leader <- ifelse(autocracies_data$Num_S_SafeLead > 0,1,0)
+
+# Doest the state provide a Safe Haven for Members for at least one NAG targeting another state?
+autocracies_data$At_Least_1_Safe_Haven_Member <- ifelse(autocracies_data$Num_S_SafeMem > 0,1,0)
+
+# Does the state provide a training camp for at least one NAG targeting another state and is at least one target state democratic?
+autocracies_data$TC_and_Dem_Target <- ifelse((autocracies_data$Num_S_TrainCamp > 0 & autocracies_data$target_democ == 1),1,0)
+
+
+# Does the state provide any support for at least one NAG targeting a democracy?
+autocracies_data$At_Least_1_Democratic_Target <- 
+        ifelse((autocracies_data$target_democ == 1),1,0)
+
+# Low cost, non-domestic support types combined
+
+autocracies_data$Low_Cost_Non_Domestic_Support <- ifelse((
+        autocracies_data$At_Least_1_Training_Support_NonDomestic == 1 | autocracies_data$At_Least_1_Other_Support == 1 | autocracies_data$At_Least_1_Transport_Support == 1),1,0)
+
+
+# High cost, non-domestic support types combined
+
+autocracies_data$High_Cost_Non_Domestic_Support <- ifelse((
+        autocracies_data$At_Least_1_Troop_Support == 1 | autocracies_data$At_Least_1_Financial_Support == 1 | autocracies_data$At_Least_1_Weapons_and_Logistics_Support == 1),1,0)
+
+# Low cost, domestic support types combined
+
+autocracies_data$Low_Cost_Domestic_Support <- ifelse((autocracies_data$At_Least_1_Office == 1 | autocracies_data$At_Least_1_Safe_Haven_Leader == 1),1,0)
+
+# High cost, domestic support types combined
+
+autocracies_data$High_Cost_Domestic_Support <- ifelse((autocracies_data$At_Least_1_Safe_Haven_Member == 1 | autocracies_data$At_Least_1_Training_Camp),1,0)
+
+
+# Does the state provide only low cost, non-domestic support for NAGS?
+
+autocracies_data$Type_1_Support <- ifelse((autocracies_data$Low_Cost_Non_Domestic_Support == 1 & autocracies_data$High_Cost_Non_Domestic_Support == 0 & autocracies_data$Low_Cost_Domestic_Support == 0 & autocracies_data$High_Cost_Domestic_Support == 0),1,0)
+
+# Does the state provide only low cost, domestic support for NAGS?
+
+autocracies_data$Type_2_Support <- ifelse((autocracies_data$Low_Cost_Non_Domestic_Support == 0 & autocracies_data$High_Cost_Non_Domestic_Support == 0 & autocracies_data$Low_Cost_Domestic_Support == 1 & autocracies_data$High_Cost_Domestic_Support == 0),1,0)
+
+# Does the state provide only low cost support?
+
+autocracies_data$Type_3_Support <- ifelse((autocracies_data$At_Least_1_NAG_Supported == 1 & autocracies_data$High_Cost_Non_Domestic_Support == 0 & autocracies_data$High_Cost_Domestic_Support == 0),1,0)
+
+# Does the state provide only Non Domestic support?
+
+autocracies_data$Type_4_Support <- ifelse((autocracies_data$At_Least_1_NAG_Supported == 1 & autocracies_data$Low_Cost_Domestic_Support == 0 & autocracies_data$High_Cost_Domestic_Support == 0),1,0)
+
+# Does the state provide only Low cost or Non Domestic support?
+
+autocracies_data$Type_5_Support <- ifelse((autocracies_data$At_Least_1_NAG_Supported == 1 & autocracies_data$High_Cost_Domestic_Support == 0),1,0)
+
+# Does the state provide only support other than training camps or Troops)?
+autocracies_data$Type_6_Support <- ifelse((autocracies_data$At_Least_1_NAG_Supported == 1 & autocracies_data$At_Least_1_Training_Camp == 0 & autocracies_data$At_Least_1_Troop_Support == 0),1,0)
+
+# Support only other than training camps?
+autocracies_data$Type_7_Support <- ifelse((autocracies_data$At_Least_1_NAG_Supported == 1 & autocracies_data$At_Least_1_Training_Camp == 0),1,0)
+
+```
+
+### Summary Statistics: Dependent Variables
+
+```{r}
+
+# Does the state support at least one NAG targeting another state?  
+cat("At least one NAG supported:", sum(autocracies_data$At_Least_1_NAG_Supported), "\n","No NAGs supported:", sum(autocracies_data$At_Least_1_NAG_Supported == 0), "\n")
+
+# Number of NAGs supported
+
+cat("Number of NAGs support:", sum(autocracies_data$NAGs_Supported), "\n")
+
+
+# Number of NAGs with training camps
+
+
+
+# Does the state provide Other support to at least one NAG targeting another state?
+cat("At least one NAG supported with Other type support:", sum(autocracies_data$At_Least_1_Other_Support), "\n","No NAGs supported:", sum(autocracies_data$At_Least_1_Other_Support == 0), "\n")
+
+
+# Does the state provide Transport support to at least one NAG targeting another state?
+cat("At least one NAG supported with Transportation:", sum(autocracies_data$At_Least_1_Transport_Support), "\n","No NAGs supported:", sum(autocracies_data$At_Least_1_Transport_Support == 0), "\n")
+
+# Does the state provide Training support to at least one NAG targeting another state?
+cat("At least one NAG supported with Training:", sum(autocracies_data$At_Least_1_Training_Support), "\n","No NAGs supported:", sum(autocracies_data$At_Least_1_Training_Support == 0), "\n")       
+
+# Does the state host at least one training camp for a NAG targeting another state?
+cat("At least one NAG supported with Training Camp:", sum(autocracies_data$At_Least_1_Training_Camp), "\n","No NAGs supported:", sum(autocracies_data$At_Least_1_Training_Camp == 0), "\n")
+
+# Does the state provide Training support other than hosting a training camp for at least one NAG targeting another state?
+
+cat("At least one NAG with Non-Domestic Training support:", sum(autocracies_data$At_Least_1_Training_Support_NonDomestic), "\n","No NAGs supported:", sum(autocracies_data$At_Least_1_Training_Support_NonDomestic == 0), "\n")
+
+
+# Does the state provide Weapons and Logistics Support for at least one NAG targeting another state?
+
+cat("At least one NAG with Weapons and Logistics support:", sum(autocracies_data$At_Least_1_Weapons_and_Logistics_Support), "\n","No NAGs supported:", sum(autocracies_data$At_Least_1_Weapons_and_Logistics_Support == 0), "\n")
+
+# Does the state provide Financial Assistance for at least one NAG targeting another state?
+
+cat("At least one NAG with Financial Assistance:", sum(autocracies_data$At_Least_1_Financial_Support), "\n","No NAGs supported:", sum(autocracies_data$At_Least_1_Financial_Support == 0), "\n")
+
+# Does the state provide troops for at least one NAG targeting another state?
+
+cat("At least one NAG with Troop Support:", sum(autocracies_data$At_Least_1_Troop_Support), "\n","No NAGs supported:", sum(autocracies_data$At_Least_1_Troop_Support == 0), "\n")
+
+# Does the state host offices for propaganda or recruitment for at least one NAG targeting another state?
+
+cat("At least one NAG with domestic Office:", sum(autocracies_data$At_Least_1_Office), "\n","No NAGs supported:", sum(autocracies_data$At_Least_1_Office == 0), "\n")
+
+# Does the state provide a Safe Haven for Leaders for at least one NAG targeting another state?
+
+cat("At least one NAG with domestic Safe Haven for Leader(s):", sum(autocracies_data$At_Least_1_Safe_Haven_Leader), "\n","No NAGs supported:", sum(autocracies_data$At_Least_1_Safe_Haven_Leader == 0), "\n")
+
+# Doest the state provide a Safe Haven for Members for at least one NAG targeting another state?
+
+cat("At least one NAG with domestic Safe Haven for Members:", sum(autocracies_data$At_Least_1_Safe_Haven_Member), "\n","No NAGs supported:", sum(autocracies_data$At_Least_1_Safe_Haven_Member == 0), "\n")
+
+
+# Does the state provide a training camp for at least one NAG targeting another state and is at least one target state democratic?
+
+cat("At least one NAG with domestic Training Camp and \n at least one target state is democratic:", sum(autocracies_data$TC_and_Dem_Target, na.rm = TRUE), "\n","No NAGs supported:", sum(autocracies_data$TC_and_Dem_Target  == 0, na.rm = TRUE), "\n")
+
+summary(autocracies_data$TC_and_Dem_Target )
+
+# Does the state provide any support for at least one NAG targeting a democracy?
+
+cat("At least \n one target state is democratic:", sum(autocracies_data$At_Least_1_Democratic_Target, na.rm = TRUE), "\n","No NAGs supported:", sum(autocracies_data$At_Least_1_Democratic_Target == 0, na.rm = TRUE), "\n")
+
+summary(autocracies_data$At_Least_1_Democratic_Target)
+
+
+
+# Low cost, non-domestic support types combined
+
+cat("Low cost, non-domestic support types combined:", sum(autocracies_data$Low_Cost_Non_Domestic_Support), "\n")
+
+# High cost, non-domestic support types combined
+
+cat("High cost, non-domestic support types combined:", sum(autocracies_data$High_Cost_Non_Domestic_Support), "\n")
+
+# Low cost, domestic support types combined
+
+cat("Low cost, domestic support types combined:", sum(autocracies_data$Low_Cost_Domestic_Support), "\n")
+
+# High cost, domestic support types combined
+
+cat("High cost, domestic support types combined:", sum(autocracies_data$High_Cost_Domestic_Support), "\n")
+
+# Does the state provide only low cost, non-domestic support for NAGS?
+
+cat("Only low cost, non-domestic support:", sum(autocracies_data$Type_1_Support), "\n")
+
+# Does the state provide only low cost, domestic support for NAGS?
+
+cat("Only low cost, domestic support:", sum(autocracies_data$Type_2_Support), "\n")
+
+# Does the state provide only low cost support?
+
+cat("Only low cost support:", sum(autocracies_data$Type_3_Support), "\n")
+
+
+# Does the state provide only Non Domestic support?
+
+cat("Only Non Domestic support:", sum(autocracies_data$Type_4_Support), "\n")
+
+# Does the state provide only Low cost or Non Domestic support?
+
+cat("Only Low cost or Non Domestic support:", sum(autocracies_data$Type_5_Support), "\n")
+
+
+# Does the state provide only Low and medium cost support (no training camps, no troop support)?
+
+
+cat("Only Low and medium cost support \n No training camps or troops:", sum(autocracies_data$Type_6_Support), "\n")
+
+# Support only other than training camps?
+
+cat("Only support other than training camps:", sum(autocracies_data$Type_7_Support), "\n")
+
+```
+
+
+
+

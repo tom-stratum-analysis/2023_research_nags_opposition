@@ -23,10 +23,10 @@ autocracies_data <- read.csv(here("data","autocracies_data_v.csv"))
 
 autocracies_data$NAGs_Supported <- autocracies_data$NumNAG_S
 autocracies_data$NAGS_with_Training_Camps <- autocracies_data$Num_S_TrainCamp
-autocracies_data$opposition_size <- autocracies_data$oppsize_norm
-autocracies_data$W <- autocracies_data$W_norm
-autocracies_data$distance_between_capitals <- autocracies_data$capdist
-autocracies_data$democratizing_civil_society_movement <- autocracies_data$v2csanmvch_4
+autocracies_data$Opposition_Size <- autocracies_data$oppsize_norm
+autocracies_data$Minimal_Winning_Coalition <- autocracies_data$W_norm
+autocracies_data$Distance_Between_Capitals <- autocracies_data$capdist
+autocracies_data$Democratizing_Civil_Society_Movement <- autocracies_data$v2csanmvch_4
 
 
 hurdle_count_n <- autocracies_data[which(autocracies_data$NumNAG_S > 0),]
