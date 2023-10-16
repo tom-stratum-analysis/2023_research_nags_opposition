@@ -141,6 +141,9 @@ autocracies_data$Low_Cost_Domestic_Support <- ifelse((autocracies_data$At_Least_
 
 autocracies_data$High_Cost_Domestic_Support <- ifelse((autocracies_data$At_Least_1_Safe_Haven_Member == 1 | autocracies_data$At_Least_1_Training_Camp),1,0)
 
+# Domestic support types combined
+
+autocracies_data$Domestic_Support <- ifelse((autocracies_data$Low_Cost_Domestic_Support == 1 | autocracies_data$High_Cost_Domestic_Support == 1),1,0)
 
 # Does the state provide only low cost, non-domestic support for NAGS?
 
@@ -167,6 +170,10 @@ autocracies_data$Type_6_Support <- ifelse((autocracies_data$At_Least_1_NAG_Suppo
 
 # Support only other than training camps?
 autocracies_data$Type_7_Support <- ifelse((autocracies_data$At_Least_1_NAG_Supported == 1 & autocracies_data$At_Least_1_Training_Camp == 0),1,0)
+
+# High visibility with democratic target
+
+autocracies_data$High_Visibility_Democratic_Target <- ifelse((autocracies_data$target_democ == 1 & autocracies_data$Domestic_Support == 1),1,0)
 
 ```
 
@@ -259,6 +266,10 @@ cat("Low cost, domestic support types combined:", sum(autocracies_data$Low_Cost_
 
 cat("High cost, domestic support types combined:", sum(autocracies_data$High_Cost_Domestic_Support), "\n")
 
+# Domestic support types combined
+
+cat("Domestic support types combined:", sum(autocracies_data$Domestic_Support), "\n")
+
 # Does the state provide only low cost, non-domestic support for NAGS?
 
 cat("Only low cost, non-domestic support:", sum(autocracies_data$Type_1_Support), "\n")
@@ -289,6 +300,10 @@ cat("Only Low and medium cost support \n No training camps or troops:", sum(auto
 # Support only other than training camps?
 
 cat("Only support other than training camps:", sum(autocracies_data$Type_7_Support), "\n")
+
+# High visibility with democratic target
+
+cat("High visibility with democratic target:", sum(autocracies_data$High_Visibility_Democratic_Target, na.rm = TRUE), "\n")
 
 ```
 
