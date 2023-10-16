@@ -521,9 +521,44 @@ summary(model_h4a_full)
 
 ### Hypothesis H5
 
-The positive relationship between opposition size and support for NAGs will increase as the cost and visibility of support increases.
+The positive relationship between opposition size and support for NAGs will increase as the visibility of support increases. The relationship to cost will likely be nonlinear, with too little cost being ineffective and too much cost being too great compared to the cost of repression. 
 
-We cam measure this with Cohen's d for the effect of opposition size on each dependent variable
+We cam measure this with Cliff's Delta for the effect of opposition size on each dependent variable. Cliff's delta is designed for ordinal variables. In this case the binary variable support or not support is also an ordinal variable with ranks of 0 for no support and 1 for support, so the use of Cliff's Delta is appropriate.^[Torchiano, Marco. "effsize: Efficient Effect Size Computation", doi = "10.5281/zenodo.1480624", url = "https://CRAN.R-project.org/package=effsize"]
 
-https://stats.stackexchange.com/questions/333447/compare-the-relative-effects-of-an-independent-variable-on-two-different-depende
+From suggestion to use Cohen's d to compare effect sizes of the same independent variable on two different continuous variables.^[https://stats.stackexchange.com/questions/333447/compare-the-relative-effects-of-an-independent-variable-on-two-different-depende]
 
+```{r}
+library(effsize)
+
+
+high_cost_domestic_d <- cliff.delta(autocracies_data$Opposition_Size, autocracies_data$High_Cost_Domestic_Support)
+
+
+low_cost_domestic_d <- cliff.delta(autocracies_data$Opposition_Size, autocracies_data$Low_Cost_Domestic_Support)
+
+
+
+high_cost_non_domestic_d <- cliff.delta(autocracies_data$Opposition_Size, autocracies_data$High_Cost_Non_Domestic_Support)
+
+
+
+
+low_cost_not_domestic_d <- cliff.delta(autocracies_data$Opposition_Size, autocracies_data$Low_Cost_Non_Domestic_Support)
+
+cat("Effect size for H5a: High Cost, Domestic Support", "\n")
+high_cost_domestic_d
+
+cat("Effect size for H5b: Low Cost, Domestic Support", "\n")
+low_cost_domestic_d
+
+cat("Effect size for H5c: High Cost, Non-Domestic Support", "\n")
+high_cost_non_domestic_d
+
+cat("Effect size for H5d: Low Cost, Non-Domestic Support", "\n")
+low_cost_not_domestic_d
+cat("\n")
+cat("Note that the relationship between opposition size and support for NAGs is negative and non-significant for low cost, non-domestic support. This is the opposite of the effect for high cost, non-domestic support and as predicted for the signaling hypothesis over low cost capacity building.", "\n")
+
+
+```
+While the effect sizes are not clearly separated for the four broad categories, the negative effect for low cost, low visibility support and the overall preference for high visibility over low visibility support is consistent with the signaling theory of support for NAGs. Since the purpose of signaling is to provide a signal that while costly is less costly than whatever is being signaled, it makes sense that the effect size for low cost, high visibility support is opposite the effect for low cost, low visibility support and larger than the effect for high cost, low visibility support.
