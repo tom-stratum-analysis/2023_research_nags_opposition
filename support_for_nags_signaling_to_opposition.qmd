@@ -19,6 +19,9 @@ This work includes data for all nondemocracies, defined as a Regimes of the Worl
 options(scipen = 999)
 # library(stargazer)
 library(here)
+library(glmx)
+library(ggplot2)
+library(sjPlot)
 
 autocracies_data <- read.csv(here("data","autocracies_data_v.csv"))
 ```
@@ -28,8 +31,16 @@ autocracies_data <- read.csv(here("data","autocracies_data_v.csv"))
 
 ```{r warning=FALSE, message=FALSE}
 
+## Independent variable
+
 # Opposition Size 
 autocracies_data$Opposition_Size <- autocracies_data$oppsize_norm
+
+# Strength of Democratizing Civil Society Movement
+autocracies_data$Democratizing_Civil_Society_Movement <- autocracies_data$v2csanmvch_4
+
+
+## Control Variables
 
 # Minimal Winning Coalition (Selectorate measure)
 # normalized measure of W based on Smith and Bueno de Mesquita 2022
@@ -37,9 +48,6 @@ autocracies_data$Minimal_Winning_Coalition <- autocracies_data$W_norm
 
 # Distance between supporter and target capitals
 autocracies_data$Distance_Between_Capitals <- autocracies_data$capdist
-
-# Strength of Democratizing Civil Society Movement
-autocracies_data$Democratizing_Civil_Society_Movement <- autocracies_data$v2csanmvch_4
 
 # Supporter CINC
 autocracies_data$Supporter_CINC <- autocracies_data$supporter_cinc
@@ -59,7 +67,7 @@ autocracies_data$War_on_Terror <- autocracies_data$WarOnTerror
 # Oil income
 autocracies_data$Supporter_Oil_Income <- autocracies_data$e_total_oil_income_pc
 
-# Religious Regime Ideoloyg
+# Religious Regime Ideology
 autocracies_data$Religious_Regime_Ideology <- autocracies_data$v2exl_legitideolcr_4 
 
 
@@ -308,5 +316,214 @@ cat("High visibility with democratic target:", sum(autocracies_data$High_Visibil
 ```
 
 
+### Dependent Variable Plots
 
+```{r}
+
+plot_df <- autocracies_data
+
+
+# High cost, domestic support types combined
+
+plot_df$High_Cost_Domestic_Support <- as.factor(plot_df$High_Cost_Domestic_Support)
+
+barplot(table(plot_df$High_Cost_Domestic_Support), main = "High Cost Domestic Support", xlab = "Number of States", ylab = "Number of NAGs")
+
+# Low cost, domestic support types combined
+
+plot_df$Low_Cost_Domestic_Support <- as.factor(plot_df$Low_Cost_Domestic_Support)            
+
+barplot(table(plot_df$Low_Cost_Domestic_Support), main = "Low Cost Domestic Support", xlab = "Number of States", ylab = "Number of NAGs")
+
+# High cost, non-domestic support types combined
+
+plot_df$High_Cost_Non_Domestic_Support <- as.factor(plot_df$High_Cost_Non_Domestic_Support)
+
+barplot(table(plot_df$High_Cost_Non_Domestic_Support), main = "High Cost Non Domestic Support", xlab = "Number of States", ylab = "Number of NAGs")
+
+# Low cost, non-domestic support types combined
+
+plot_df$Low_Cost_Non_Domestic_Support <- as.factor(plot_df$Low_Cost_Non_Domestic_Support)
+
+barplot(table(plot_df$Low_Cost_Non_Domestic_Support), main = "Low Cost Non Domestic Support", xlab = "Number of States", ylab = "Number of NAGs")
+
+# Domestic support types combined
+
+plot_df$Domestic_Support <- as.factor(plot_df$Domestic_Support)
+
+barplot(table(plot_df$Domestic_Support), main = "Domestic Support", xlab = "Number of States", ylab = "Number of NAGs")
+
+# Does the state provide only low cost, non-domestic support for NAGS?
+
+plot_df$Type_1_Support <- as.factor(plot_df$Type_1_Support)
+
+barplot(table(plot_df$Type_1_Support), main = "Only low cost, non-domestic support", xlab = "Number of States", ylab = "Number of NAGs")
+
+# Does the state provide only low cost, domestic support for NAGS?
+
+plot_df$Type_2_Support <- as.factor(plot_df$Type_2_Support)
+
+barplot(table(plot_df$Type_2_Support), main = "Only low cost, domestic support", xlab = "Number of States", ylab = "Number of NAGs")
+
+# Does the state provide only low cost support?
+
+plot_df$Type_3_Support <- as.factor(plot_df$Type_3_Support)
+
+barplot(table(plot_df$Type_3_Support), main = "Only low cost support", xlab = "Number of States", ylab = "Number of NAGs")
+
+# Does the state provide only Non Domestic support?
+
+plot_df$Type_4_Support <- as.factor(plot_df$Type_4_Support)
+
+barplot(table(plot_df$Type_4_Support), main = "Only Non Domestic support", xlab = "Number of States", ylab = "Number of NAGs")
+
+# Does the state provide only Low cost or Non Domestic support?
+
+plot_df$Type_5_Support <- as.factor(plot_df$Type_5_Support)
+
+barplot(table(plot_df$Type_5_Support), main = "Only Low cost or Non Domestic support", xlab = "Number of States", ylab = "Number of NAGs")
+
+# Does the state provide only Low and medium cost support (no training camps, no troop support)?
+
+plot_df$Type_6_Support <- as.factor(plot_df$Type_6_Support)
+
+barplot(table(plot_df$Type_6_Support), main = "Only Low and medium cost support \n No training camps or troops", xlab = "Number of States", ylab = "Number of NAGs")
+
+# Support only other than training camps?
+
+plot_df$Type_7_Support <- as.factor(plot_df$Type_7_Support)
+
+barplot(table(plot_df$Type_7_Support), main = "Only support other than training camps", xlab = "Number of States", ylab = "Number of NAGs")
+
+# Democratic target
+
+plot_df$Democratic_Target <- as.factor(plot_df$At_Least_1_Democratic_Target)
+
+barplot(table(plot_df$Democratic_Target), main = "Democratic target", xlab = "Number of States", ylab = "Number of NAGs")
+
+
+# High visibility with democratic target
+
+plot_df$High_Visibility_Democratic_Target <- as.factor(plot_df$High_Visibility_Democratic_Target)
+
+barplot(table(plot_df$High_Visibility_Democratic_Target), main = "High visibility (Domestic) with democratic target", xlab = "Number of States", ylab = "Number of NAGs")
+
+# Democratic Target with Training Camp
+
+plot_df$Democratic_Target_Training_Camp <- as.factor(plot_df$TC_and_Dem_Target)
+
+barplot(table(plot_df$Democratic_Target_Training_Camp), main = "Democratic Target with Training Camp", xlab = "Number of States", ylab = "Number of NAGs")
+
+```
+
+
+## Hypotheses
+
+### Hypothesis H1
+
+*H1: States with higher levels of domestic opposition will be more likely to provide high cost, high visibility support for NAGs than states with lower levels of domestic oppositoin, all else equal.*
+
+
+
+```{r}
+# logit model with base control variables - Cold War, War on Terror, Capitals Distance, W, and State Capacity
+model_h1 <- glm(High_Cost_Domestic_Support ~ Opposition_Size + Minimal_Winning_Coalition + Distance_Between_Capitals + Supporter_State_Capacity + Cold_War + War_on_Terror, data = autocracies_data, family = binomial(link = "logit"))
+summary(model_h1)
+
+# probit model with base control variables - Cold War, War on Terror, Capitals Distance, W, and State Capacity
+model_h1_probit <- glm(High_Cost_Domestic_Support ~ Opposition_Size + Minimal_Winning_Coalition + Distance_Between_Capitals + Supporter_State_Capacity + Cold_War + War_on_Terror, data = autocracies_data, family = binomial(link = "probit"))
+summary(model_h1_probit)
+
+
+
+
+#logit model with full controls - base controls plus supporter oil income, religious regime ideology, 
+
+model_h1_full <- glm(High_Cost_Domestic_Support ~ Opposition_Size + Minimal_Winning_Coalition + Distance_Between_Capitals + Supporter_State_Capacity + Cold_War + War_on_Terror + Supporter_Oil_Income + Religious_Regime_Ideology, data = autocracies_data, family = binomial(link = "logit"))
+
+summary(model_h1_full)
+
+
+```
+
+
+
+### Hypothesis H2
+
+*H2: Low cost, low domestic visibility support for NAGs will have no significant relationship with opposition size, all else equal.*
+
+
+```{r}
+# logit model with base control variables - Cold War, War on Terror, Capitals Distance, W, and State Capacity
+model_h2 <- glm(Low_Cost_Non_Domestic_Support ~ Opposition_Size + Minimal_Winning_Coalition + Distance_Between_Capitals + Supporter_State_Capacity + Cold_War + War_on_Terror, data = autocracies_data, family = binomial(link = "logit"))
+summary(model_h2)
+
+# logit model with full control variables - base controls plus supporter oil income, religious regime ideology
+
+model_h2_full <- glm(Low_Cost_Non_Domestic_Support ~ Opposition_Size + Minimal_Winning_Coalition + Distance_Between_Capitals + Supporter_State_Capacity + Cold_War + War_on_Terror + Supporter_Oil_Income + Religious_Regime_Ideology, data = autocracies_data, family = binomial(link = "logit"))
+summary(model_h2_full)
+
+
+```
+
+
+### Hypothesis H3
+
+*H3: States with higher levels of domestic opposition will be more likely to provide low cost, domestic support for NAGs than states with lower levels of domestic opposition, all else equal.*
+
+```{r}
+# logit model with base control variables - Cold War, War on Terror, Capitals Distance, W, and State Capacity
+model_h3 <- glm(Low_Cost_Domestic_Support ~ Opposition_Size + Minimal_Winning_Coalition + Distance_Between_Capitals + Supporter_State_Capacity + Cold_War + War_on_Terror, data = autocracies_data, family = binomial(link = "logit"))
+summary(model_h3)
+
+# logit model with full control variables - base controls plus supporter oil income, religious regime ideology
+
+model_h3_full <- glm(Low_Cost_Domestic_Support ~ Opposition_Size + Minimal_Winning_Coalition + Distance_Between_Capitals + Supporter_State_Capacity + Cold_War + War_on_Terror + Supporter_Oil_Income + Religious_Regime_Ideology, data = autocracies_data, family = binomial(link = "logit"))
+summary(model_h3_full)
+
+
+```
+
+### Hypothesis H4
+
+*H4: States with higher levels of domestic opposition will be less likely to provide high cost, non-domestic support for NAGS, all else equal.*
+
+```{r}
+
+# logit model with base control variables - Cold War, War on Terror, Capitals Distance, W, and State Capacity
+model_h4 <- glm(High_Cost_Non_Domestic_Support ~ Opposition_Size + Minimal_Winning_Coalition + Distance_Between_Capitals + Supporter_State_Capacity + Cold_War + War_on_Terror, data = autocracies_data, family = binomial(link = "logit"))
+summary(model_h4)
+
+
+
+```
+
+#### Hypothesis H4a
+
+*H4a: States with higher levels of domestic opposition will be less likely to provide financial assistance to NAGs, all else equal.*
+
+```{r} 
+# logit model with base controls - Cold War, War on Terror, Capitals Distance, W, and State Capacity
+model_h4a <- glm(At_Least_1_Financial_Support ~ Opposition_Size + Minimal_Winning_Coalition + Distance_Between_Capitals + Supporter_State_Capacity + Cold_War + War_on_Terror, data = autocracies_data, family = binomial(link = "logit"))    
+summary(model_h4a)
+
+# probit model with base controls - Cold War, War on Terror, Capitals Distance, W, and State Capacity
+model_h4a_probit <- glm(At_Least_1_Financial_Support ~ Opposition_Size + Minimal_Winning_Coalition + Distance_Between_Capitals + Supporter_State_Capacity + Cold_War + War_on_Terror, data = autocracies_data, family = binomial(link = "probit"))
+summary(model_h4a_probit)
+
+# logit model with full controls - base controls plus supporter oil income, religious regime ideology
+
+model_h4a_full <- glm(At_Least_1_Financial_Support ~ Opposition_Size + Minimal_Winning_Coalition + Distance_Between_Capitals + Supporter_State_Capacity + Cold_War + War_on_Terror + Supporter_Oil_Income + Religious_Regime_Ideology, data = autocracies_data, family = binomial(link = "logit"))
+summary(model_h4a_full)
+
+```
+
+
+### Hypothesis H5
+
+The positive relationship between opposition size and support for NAGs will increase as the cost and visibility of support increases.
+
+We cam measure this with Cohen's d for the effect of opposition size on each dependent variable
+
+https://stats.stackexchange.com/questions/333447/compare-the-relative-effects-of-an-independent-variable-on-two-different-depende
 
