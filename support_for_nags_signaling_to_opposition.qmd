@@ -153,6 +153,10 @@ autocracies_data$High_Cost_Domestic_Support <- ifelse((autocracies_data$At_Least
 
 autocracies_data$Domestic_Support <- ifelse((autocracies_data$Low_Cost_Domestic_Support == 1 | autocracies_data$High_Cost_Domestic_Support == 1),1,0)
 
+## Non_Domestic support types combined
+
+autocracies_data$Non_Domestic_Support <- ifelse((autocracies_data$Low_Cost_Non_Domestic_Support == 1 | autocracies_data$High_Cost_Non_Domestic_Support == 1),1,0)
+
 # Does the state provide only low cost, non-domestic support for NAGS?
 
 autocracies_data$Type_1_Support <- ifelse((autocracies_data$Low_Cost_Non_Domestic_Support == 1 & autocracies_data$High_Cost_Non_Domestic_Support == 0 & autocracies_data$Low_Cost_Domestic_Support == 0 & autocracies_data$High_Cost_Domestic_Support == 0),1,0)
@@ -277,6 +281,8 @@ cat("High cost, domestic support types combined:", sum(autocracies_data$High_Cos
 # Domestic support types combined
 
 cat("Domestic support types combined:", sum(autocracies_data$Domestic_Support), "\n")
+
+
 
 # Does the state provide only low cost, non-domestic support for NAGS?
 
@@ -530,6 +536,9 @@ From suggestion to use Cohen's d to compare effect sizes of the same independent
 ```{r}
 library(effsize)
 
+domestic_d <- cliff.delta(autocracies_data$Opposition_Size, autocracies_data$Domestic_Support)
+
+non_domestic_d <- cliff.delta(autocracies_data$Opposition_Size, autocracies_data$Non_Domestic_Support)
 
 high_cost_domestic_d <- cliff.delta(autocracies_data$Opposition_Size, autocracies_data$High_Cost_Domestic_Support)
 
@@ -558,6 +567,15 @@ cat("Effect size for H5d: Low Cost, Non-Domestic Support", "\n")
 low_cost_not_domestic_d
 cat("\n")
 cat("Note that the relationship between opposition size and support for NAGs is negative and non-significant for low cost, non-domestic support. This is the opposite of the effect for high cost, non-domestic support and as predicted for the signaling hypothesis over low cost capacity building.", "\n")
+
+
+cat("Effect size for H5e: Domestic Support", "\n")
+
+domestic_d
+
+cat("Effect size for H5f: Non-Domestic Support", "\n")
+
+non_domestic_d
 
 
 ```
