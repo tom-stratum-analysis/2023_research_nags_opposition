@@ -1,6 +1,6 @@
 ---
 title: "Support for non-state armed groups as domestic signaling to opposition groups"
-author: "Tom Hanna"
+author: "T.H."
 format:
         html:
                 self-contained: true

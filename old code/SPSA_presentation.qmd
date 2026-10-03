@@ -2,9 +2,7 @@
 title: The Threat of Autocracy Promotion
 subtitle: International Attacks on Democracy as Domestic Signaling
 author:
-   - Tom Hanna 
-   - University of Houston
-   - tlhanna@uh.edu
+   - T.H. 
 format:
   revealjs:
     incremental: true   
@@ -12,9 +10,7 @@ format:
     chalkboard: 
       buttons: false
     preview-links: auto
-    logo: images/uh_red.png
     css: styles.css
-    footer: <https://tomhanna.me>
 editor: visual
 ---
 
